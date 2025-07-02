@@ -1,0 +1,81 @@
+/* 根據設計交付文件定義的顏色變數 */
+:root {
+  /* 主要色 (Primary) */
+  --color-primary-obsidian-gray: #313944;
+  --color-primary-button-brown: #794425;
+
+  /* 次要色 (Secondary) */
+  --color-secondary-earth-gold: #86744c;
+  --color-secondary-rose-gold: #9c694c;
+
+  /* 語意色 (Semantic) */
+  --color-semantic-alert: #bb2f2f;
+  --color-semantic-success: #5e8c61;
+  --color-semantic-info: #4a6c8c;
+
+  /* 中性色 (Neutral) */
+  --color-neutral-bg-dark-blue: #0f2d3c;
+  --color-neutral-form-bg-white: #fff8f2;
+  --color-neutral-form-bg-light-orange: #f7eae1;
+  --color-neutral-lower-form-brown: #4e463f;
+  --color-neutral-footer: #413b37;
+  --color-neutral-navbar-text: #f9c78b;
+  --color-neutral-text: #794425;
+  --color-neutral-border: #767676;
+
+  /* 按鈕狀態色 (Button States) */
+  --color-button-hover: #7e7267;
+
+  /* 全域通用語意橋接 (Global Semantic Bridge) */
+  --color-background: var(--color-neutral-form-bg-white); /* 預設使用表單背景(白)作為主要背景 */
+  --color-text: var(--color-neutral-text); /* 預設文字顏色 */
+  --color-border: var(--color-neutral-border); /* 預設邊框顏色 */
+  --color-heading: var(--color-primary-obsidian-gray); /* 標題顏色 */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-text);
+  background: var(--color-background);
+  transition: color 0.5s, background-color 0.5s;
+  line-height: 1.6;
+  /* 字體 (Typography)  */
+  font-family: Montserrat, "Noto Sans TC", "Noto Sans JP", Tahoma, Mitr, Sarabun, "Bai Jamjuree",
+    "Microsoft JhengHei", "SF Pro TC", sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 字體層級 (Type Scale)  */
+.f1 {
+  font-size: 36px;
+}
+
+.f2 {
+  font-size: 30px;
+}
+
+.f3 {
+  font-size: 20px;
+}
+
+.f4 {
+  font-size: 16px;
+}
+
+.f5 {
+  font-size: 14px;
+}
+
+.f6 {
+  font-size: 12px;
+}
