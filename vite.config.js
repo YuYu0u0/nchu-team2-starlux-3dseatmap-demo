@@ -7,7 +7,7 @@ import vueDevTools from "vite-plugin-vue-devtools";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue(), vueDevTools()],
-  base: "/test",
+  base: "/test/",
   server: {
     open: true, // 自動開啟瀏覽器
   },
