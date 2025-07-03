@@ -132,13 +132,14 @@ export default {
         };
     },
     mounted() {
+        const baseUrl = import.meta.env.BASE_URL;
         const collapse = this.$refs.collapseRef;
         collapse.addEventListener("show.bs.collapse", () => {
-            this.menuIconSrc = "/image/icon/nav-icon-menu-close.svg";
+            this.menuIconSrc = `${import.meta.env.BASE_URL}image/icon/nav-icon-menu-close.svg`;
             this.menuIconAlt = "關閉選單";
         });
         collapse.addEventListener("hide.bs.collapse", () => {
-            this.menuIconSrc = "/image/icon/nav-icon-menu.svg";
+            this.menuIconSrc = `${import.meta.env.BASE_URL}image/icon/nav-icon-menu.svg`;
             this.menuIconAlt = "漢堡條";
         });
     },
