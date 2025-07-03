@@ -107,8 +107,10 @@
 export default {
     name: "Navbar",
     data() {
+        const baseUrl = import.meta.env.BASE_URL;
         return {
-            menuIconSrc: "/image/icon/nav-icon-menu.svg",
+            baseUrl, // 讓 template 和其他地方都能用
+            menuIconSrc: `${baseUrl}image/icon/nav-icon-menu.svg`,
             menuIconAlt: "漢堡條",
             desktopMenuItems: [
                 { text: "預訂行程", path: "/booking" },
@@ -132,14 +134,13 @@ export default {
         };
     },
     mounted() {
-        const baseUrl = import.meta.env.BASE_URL;
         const collapse = this.$refs.collapseRef;
         collapse.addEventListener("show.bs.collapse", () => {
-            this.menuIconSrc = `${baseUrl}image/icon/nav-icon-menu-close.svg`;
+            this.menuIconSrc = `${this.baseUrl}image/icon/nav-icon-menu-close.svg`;
             this.menuIconAlt = "關閉選單";
         });
         collapse.addEventListener("hide.bs.collapse", () => {
-            this.menuIconSrc = `${baseUrl}image/icon/nav-icon-menu.svg`;
+            this.menuIconSrc = `${this.baseUrl}image/icon/nav-icon-menu.svg`;
             this.menuIconAlt = "漢堡條";
         });
     },
