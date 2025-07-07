@@ -33,11 +33,10 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-const baseUrl = import.meta.env.BASE_URL;
 const props = defineProps({
     title: { type: String, default: '立即探索精彩目的地' },
     buttonText: { type: String, default: '立即預訂' },
-    background: { type: String, default: `${baseUrl}image/leonardo-yip-vacation.jpg` },
+    background: { type: String, default: `${import.meta.env.BASE_URL}image/leonardo-yip-vacation.jpg` },
     speed: { type: Number, default: 0.3 }, // 可自訂移動速度
 })
 
