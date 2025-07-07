@@ -107,28 +107,26 @@
 export default {
     name: "Navbar",
     data() {
-        const baseUrl = import.meta.env.BASE_URL;
         return {
-            baseUrl, // 讓 template 和其他地方都能用
-            menuIconSrc: `${baseUrl}image/icon/nav-icon-menu.svg`,
+            menuIconSrc: "/image/icon/nav-icon-menu.svg",
             menuIconAlt: "漢堡條",
             desktopMenuItems: [
                 { text: "預訂行程", path: "/booking" },
-                { text: "班機動態", path: "/comming-soon" },
-                { text: "機上設備", path: "/equipment" },
-                { text: "準備起程", path: "/comming-soon" },
-                { text: "體驗星宇", path: "/comming-soon" },
-                { text: "COSMILE會員", path: "/comming-soon" },
-                { text: "旅客服務", path: "/comming-soon" },
+                { text: "班機動態", path: "/flightstatus" },
+                { text: "機上設備", path: "/equipment#threed-area" },
+                { text: "新規宣導", path: "/announcement" },
+                // { text: "體驗星宇", path: "/comming-soon" },
+                { text: "COSMILE會員", path: "/membership" },
+                { text: "旅客須知", path: "/passengerfaq" },
             ],
             mobileMenuItems: [
                 { text: "預訂行程", path: "/booking" },
-                { text: "班機動態", path: "/comming-soon" },
+                { text: "班機動態", path: "/flightstatus" },
                 { text: "機上設備", path: "/equipment" },
-                { text: "準備起程", path: "/comming-soon" },
-                { text: "體驗星宇", path: "/comming-soon" },
-                { text: "COSMILE會員", path: "/comming-soon" },
-                { text: "旅客服務", path: "/comming-soon" },
+                { text: "新規宣導", path: "/announcement" },
+                // { text: "體驗星宇", path: "/comming-soon" },
+                { text: "COSMILE會員", path: "/membership" },
+                { text: "旅客須知", path: "/passengerfaq" },
             ],
 
         };
@@ -153,7 +151,7 @@ export default {
     width: 100%;
     height: 54px;
     margin: 0 auto;
-    background-color: var(--color-neutral-bg-dark-blue);
+    background-color: var(--color-primary-dark-blue);
     padding: 0.3rem 1rem;
 }
 
@@ -173,7 +171,7 @@ export default {
 }
 
 .gold-text {
-    color: var(--color-neutral-navbar-text);
+    color: var(--color-primary-gold);
 }
 
 .brown-text {
@@ -203,7 +201,7 @@ export default {
 .navbar-toggler:focus,
 .navbar-toggler:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--color-neutral-navbar-text);
+    box-shadow: 0 0 0 2px var(--color-primary-gold);
 }
 
 
@@ -233,7 +231,7 @@ ul.nav-phone li span {
 }
 
 .nav-main-list {
-    color: var(--color-neutral-bg-dark-blue) !important;
+    color: var(--color-primary-dark-blue) !important;
 }
 
 .nav-right-item {
