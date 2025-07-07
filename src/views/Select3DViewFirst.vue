@@ -82,8 +82,8 @@ const flightId = route.query.flightId; // 從路由參數中獲取 flightId
 const cabinClass = route.query.cabinClass; // 從路由參數中獲取 cabinClass
 
 // --- 設定 ---
-const modelUrl = '/models/A350-first-class.glb'; // 3D 模型檔案路徑
-const jpgUrl = '/image/HDRI.jpg'; // 背景圖片路徑
+const modelUrl = `${import.meta.env.BASE_URL}models/A350-first-class.glb`; // 3D 模型檔案路徑
+const jpgUrl = `${import.meta.env.BASE_URL}image/HDRI.jpg`; // 背景圖片路徑
 
 // 艙等價格映射
 const cabinClassPrices = {
@@ -289,7 +289,7 @@ const onCanvasClick = (event) => {
         console.log('Clicked object world position:', currentObject.getWorldPosition(new THREE.Vector3()));
         animateCameraTo(targetData.position, targetData.target); // 觸發運鏡動畫
         selectedTargetData.value = { ...targetData, price: cabinClassPrices[cabinClass] || 0 }; // 更新狀態以顯示資訊小卡，並帶入價格
-        
+
         // 顯示屋頂 Mesh
         if (roofObject && roofObjectOriginalParent) {
           roofObjectOriginalParent.add(roofObject);
@@ -571,5 +571,4 @@ function handleBack() {
   /* 確保不阻擋滑鼠事件 */
   z-index: 10;
 }
-
 </style>

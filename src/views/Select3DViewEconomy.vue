@@ -89,8 +89,8 @@ const flightId = route.query.flightId; // 從路由參數中獲取 flightId
 const cabinClass = route.query.cabinClass; // 從路由參數中獲取 cabinClass
 
 // --- 設定 ---
-const modelUrl = '/models/A350-economy-class.glb'; // 3D 模型檔案路徑
-const jpgUrl = '/image/HDRI.jpg'; // 背景圖片路徑
+const modelUrl = `${import.meta.env.BASE_URL}models/A350-economy-class.glb`; // 3D 模型檔案路徑
+const jpgUrl = `${import.meta.env.BASE_URL}image/HDRI.jpg`; // 背景圖片路徑
 
 // 艙等價格映射
 const cabinClassPrices = {
@@ -280,7 +280,7 @@ const onCanvasClick = (event) => {
 
     // 向上遍歷父層級，直到找到白名單中的物件或到達頂層
     while (currentObject) {
-      
+
 
       if (cameraTargets[currentObject.name]) { // 檢查名稱是否存在於資料庫
         const targetData = cameraTargets[currentObject.name];

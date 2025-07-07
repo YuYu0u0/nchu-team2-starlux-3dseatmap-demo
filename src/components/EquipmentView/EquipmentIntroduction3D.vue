@@ -16,14 +16,8 @@
       </button>
       <div v-if="showBrightnessSlider" class="brightness-control">
         <label for="window-brightness-slider">亮度</label>
-        <input
-          type="range"
-          id="window-brightness-slider"
-          min="0"
-          max="1"
-          step="0.01"
-          v-model.number="windowBrightness"
-        />
+        <input type="range" id="window-brightness-slider" min="0" max="1" step="0.01"
+          v-model.number="windowBrightness" />
       </div>
     </div>
   </div>
@@ -62,16 +56,16 @@ const props = defineProps({
 
 const featureCameraPresets = {
   '電視': {
-    position: new THREE.Vector3(0.07,0.55,0.08),
-    target: new THREE.Vector3(0.21,0.52,0.47)
+    position: new THREE.Vector3(0.07, 0.55, 0.08),
+    target: new THREE.Vector3(0.21, 0.52, 0.47)
   },
   '小冰箱': {
     position: new THREE.Vector3(-0.03, 0.47, 0),
     target: new THREE.Vector3(0.13, 0.21, 0.27)
   },
   '廁所': {
-    position: new THREE.Vector3(-0.6,0.65,0.04),
-    target: new THREE.Vector3(0.04,0.08,-0.06)
+    position: new THREE.Vector3(-0.6, 0.65, 0.04),
+    target: new THREE.Vector3(0.04, 0.08, -0.06)
   },
   '調光窗戶': {
     position: new THREE.Vector3(-0.27, 1.43, 0.04),
@@ -89,7 +83,7 @@ const initThreeD = () => {
   scene.background = new THREE.Color(0x000000);
 
   camera = new THREE.PerspectiveCamera(50, width / height, 0.01, 10000);
-  camera.position.set(-0.96,1.16,-0.61);
+  camera.position.set(-0.96, 1.16, -0.61);
   initialCameraPosition.copy(camera.position);
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -113,7 +107,7 @@ const initThreeD = () => {
 
   const loader = new GLTFLoader();
   loader.load(
-    '/models/equipment-introduction.glb',
+    `${import.meta.env.BASE_URL}models/equipment-introduction.glb`,
     (gltf) => {
       scene.add(gltf.scene);
       gltfScene = gltf.scene;
@@ -203,13 +197,13 @@ const updateModelVisibility = (forceHide = false) => {
     });
     return;
   }
-  
+
   // 如果沒有選擇項，也隱藏所有內容
   if (!props.selectedItem) {
-      gltfScene.traverse((object) => {
-          object.visible = false;
-      });
-      return;
+    gltfScene.traverse((object) => {
+      object.visible = false;
+    });
+    return;
   }
 
   const cabinGroups = { '頭等艙': 'Chair_FC', '豪華經濟艙': 'Chair_ED', '經濟艙': 'Chair_EC' };
@@ -301,7 +295,7 @@ watch(() => props.selectedItem, (newItem) => {
 
 onMounted(() => {
   initThreeD();
-  
+
   // 確保 DOM 元素已掛載
   nextTick(() => {
     if (leftCurtain.value) {
@@ -332,57 +326,60 @@ onUnmounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative; /* 為了按鈕和布幕定位 */
-  overflow: hidden; /* 隱藏布幕超出容器的部分 */
+  position: relative;
+  /* 為了按鈕和布幕定位 */
+  overflow: hidden;
+  /* 隱藏布幕超出容器的部分 */
 }
 
 .curtain {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 50.1%; /* 輕微重疊以避免中間縫隙 */
+  width: 50.1%;
+  /* 輕微重疊以避免中間縫隙 */
   background-color: var(--color-primary-brown);
   z-index: 20;
-  transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1); /* 優雅的緩動效果 */
-  background-size: 80px 100%; /* 控制褶皺的寬度 */
+  transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1);
+  /* 優雅的緩動效果 */
+  background-size: 80px 100%;
+  /* 控制褶皺的寬度 */
 }
 
 .left-curtain {
   left: 0;
   transform-origin: left;
   /* 深棕色布料風格的漸層 */
-  background-image: linear-gradient(to right, 
-    rgba(0, 0, 0, 0.2) 0%,
-    rgba(255, 255, 255, 0.1) 10%,
-    rgba(0, 0, 0, 0.2) 20%,
-    rgba(255, 255, 255, 0.1) 30%,
-    rgba(0, 0, 0, 0.2) 40%,
-    rgba(255, 255, 255, 0.1) 50%,
-    rgba(0, 0, 0, 0.2) 60%,
-    rgba(255, 255, 255, 0.1) 70%,
-    rgba(0, 0, 0, 0.2) 80%,
-    rgba(255, 255, 255, 0.1) 90%,
-    rgba(0, 0, 0, 0.2) 100%
-  );
+  background-image: linear-gradient(to right,
+      rgba(0, 0, 0, 0.2) 0%,
+      rgba(255, 255, 255, 0.1) 10%,
+      rgba(0, 0, 0, 0.2) 20%,
+      rgba(255, 255, 255, 0.1) 30%,
+      rgba(0, 0, 0, 0.2) 40%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(0, 0, 0, 0.2) 60%,
+      rgba(255, 255, 255, 0.1) 70%,
+      rgba(0, 0, 0, 0.2) 80%,
+      rgba(255, 255, 255, 0.1) 90%,
+      rgba(0, 0, 0, 0.2) 100%);
 }
 
 .right-curtain {
   right: 0;
   transform-origin: right;
   /* 深棕色布料風格的漸層 (對稱) */
-  background-image: linear-gradient(to left, 
-    rgba(0, 0, 0, 0.2) 0%,
-    rgba(255, 255, 255, 0.1) 10%,
-    rgba(0, 0, 0, 0.2) 20%,
-    rgba(255, 255, 255, 0.1) 30%,
-    rgba(0, 0, 0, 0.2) 40%,
-    rgba(255, 255, 255, 0.1) 50%,
-    rgba(0, 0, 0, 0.2) 60%,
-    rgba(255, 255, 255, 0.1) 70%,
-    rgba(0, 0, 0, 0.2) 80%,
-    rgba(255, 255, 255, 0.1) 90%,
-    rgba(0, 0, 0, 0.2) 100%
-  );
+  background-image: linear-gradient(to left,
+      rgba(0, 0, 0, 0.2) 0%,
+      rgba(255, 255, 255, 0.1) 10%,
+      rgba(0, 0, 0, 0.2) 20%,
+      rgba(255, 255, 255, 0.1) 30%,
+      rgba(0, 0, 0, 0.2) 40%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(0, 0, 0, 0.2) 60%,
+      rgba(255, 255, 255, 0.1) 70%,
+      rgba(0, 0, 0, 0.2) 80%,
+      rgba(255, 255, 255, 0.1) 90%,
+      rgba(0, 0, 0, 0.2) 100%);
 }
 
 .curtain-open .left-curtain {
@@ -400,8 +397,10 @@ onUnmounted(() => {
   right: 0;
   bottom: 0;
   background-color: transparent;
-  z-index: 30; /* 在布幕之上，防止點擊 */
-  cursor: wait; /* 提示用戶正在處理 */
+  z-index: 30;
+  /* 在布幕之上，防止點擊 */
+  cursor: wait;
+  /* 提示用戶正在處理 */
 }
 
 .three-d-content {
@@ -423,7 +422,8 @@ onUnmounted(() => {
   transition: all 0.3s;
   border-radius: 5px;
   cursor: pointer;
-  z-index: 10; /* 確保按鈕在畫布上方 */
+  z-index: 10;
+  /* 確保按鈕在畫布上方 */
 }
 
 .rotation-button:hover,
@@ -493,10 +493,13 @@ onUnmounted(() => {
 
 /* Firefox 瀏覽器的自定義滑塊 */
 .brightness-control input[type="range"]::-moz-range-thumb {
-  width: 15px; /* Wider for horizontal bar */
-  height: 15px; /* Shorter for horizontal bar */
+  width: 15px;
+  /* Wider for horizontal bar */
+  height: 15px;
+  /* Shorter for horizontal bar */
   background: var(--color-primary-gold);
-  border-radius: 3px; /* Slightly rounded corners */
+  border-radius: 3px;
+  /* Slightly rounded corners */
   cursor: pointer;
   margin-left: -2.5px;
 }
@@ -510,7 +513,8 @@ onUnmounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color:var(--color-primary-gold);
-  z-index: 15; /* 確保在布幕之下，Three.js 內容之上 */
+  background-color: var(--color-primary-gold);
+  z-index: 15;
+  /* 確保在布幕之下，Three.js 內容之上 */
 }
 </style>
