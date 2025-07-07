@@ -49,17 +49,17 @@ const equipment = [
     {
         title: '專屬小冰箱',
         description: '保持飲品冰涼，隨時取用，旅途更舒適。',
-        image: `${baseUrl}image / equipment / Mini - fridge.png`,
+        image: `${baseUrl}image/equipment/Mini-fridge.png`,
     },
     {
         title: '獨立廁所',
         description: '保持潔淨、配備洗手設施，提供旅程中的方便與隱私。',
-        image: `${baseUrl}image / equipment / Lavatory.png`,
+        image: `${baseUrl}image/equipment/Lavatory.png`,
     },
     {
         title: '調光窗戶',
         description: '自由調節透光度，享受明亮或柔和的機艙氛圍。',
-        image: `${baseUrl}image / equipment / EDW.png`,
+        image: `${baseUrl}image/equipment/EDW.png`,
     },
 ];
 </script>

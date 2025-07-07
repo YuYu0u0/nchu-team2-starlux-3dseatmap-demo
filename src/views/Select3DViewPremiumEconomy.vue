@@ -82,7 +82,7 @@ const flightId = route.query.flightId; // 從路由參數中獲取 flightId
 const cabinClass = route.query.cabinClass; // 從路由參數中獲取 cabinClass
 
 // --- 設定 ---
-const modelUrl = `${import.meta.env.BASE_URL}models/A350-economy-class.glb`; // 3D 模型檔案路徑
+const modelUrl = `${import.meta.env.BASE_URL}models/A350-premium-economy-class.glb`; // 3D 模型檔案路徑
 const jpgUrl = `${import.meta.env.BASE_URL}image/HDRI.jpg`; // 背景圖片路徑
 
 
