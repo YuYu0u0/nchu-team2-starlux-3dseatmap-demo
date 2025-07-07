@@ -113,6 +113,10 @@ const initThreeD = () => {
       gltfScene = gltf.scene;
 
       gltfScene.traverse((object) => {
+        if (object.isMesh && object.name === 'screan') {
+          const redMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+          object.material = redMaterial;
+        }
         if (object.isMesh && object.name === 'window') {
           windowMaterial.value = object.material;
           originalWindowColor.value = windowMaterial.value.color.clone();
@@ -207,7 +211,7 @@ const updateModelVisibility = (forceHide = false) => {
   }
 
   const cabinGroups = { '頭等艙': 'Chair_FC', '豪華經濟艙': 'Chair_ED', '經濟艙': 'Chair_EC' };
-  const featureGroups = { '電視': 'FC_01A_wall', '小冰箱': 'FC_refrigerator_TV', '廁所': 'LAV', '調光窗戶': 'A350_Nose_wall' };
+  const featureGroups = { '電視': 'FC_refrigerator_TV', '小冰箱': 'FC_refrigerator_TV', '廁所': 'LAV', '調光窗戶': 'A350_Nose_wall' };
   const objectsToMakeVisible = new Set();
 
   const markAncestorsVisible = (object) => {
