@@ -117,6 +117,6 @@
 
 .link-item {
     margin-right: 0.5rem;
-    color: var(--color-neutral-navbar-text);
+    color: var(--color-primary-gold);
 }
 </style>

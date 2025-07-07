@@ -35,7 +35,8 @@ import OrderSummary from '@/components/OrderSummary.vue';
 <style scoped>
 /* Main 區塊 */
 main.container {
-  margin-bottom: 30px; /* 增加 main 與 footer 之間的間距 */
+  margin-bottom: 30px;
+  /* 增加 main 與 footer 之間的間距 */
 }
 
 .main-top-bg {
@@ -45,9 +46,10 @@ main.container {
   color: #ffffff;
 }
 
-.main-bottom-bg {
-  /* height: 466px; */ /* 移除固定高度，讓內容自動撐開 */
-}
+/* .main-bottom-bg { */
+/* height: 466px; */
+/* 移除固定高度，讓內容自動撐開 */
+/* } */
 
 /* Footer 區塊 */
 footer.container-fluid {

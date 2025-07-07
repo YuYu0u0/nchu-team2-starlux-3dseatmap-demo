@@ -14,7 +14,7 @@
         <!-- 價格顯示區塊 -->
         <div class="price-display-container">
             <div class="price-display">
-                <span class="currency">NT$</span>
+                <span class="currency f5">NT$</span>
                 <span class="amount">{{ seatPrice.replace('NT$ ', '') }}</span>
             </div>
         </div>
@@ -27,15 +27,28 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
+import { useOrderStore } from '@/stores/order';
+
+const orderStore = useOrderStore();
+
+// 從 Pinia store 中獲取選定的航班資訊
+const selectedFlight = computed(() => orderStore.selectedFlight);
 
 const props = defineProps({
     seatNumber: { type: String, required: true },
     seatClass: { type: String, required: true },
-    seatPrice: { type: String, required: true },
     seatDescription: { type: String, default: "" }
 });
 
 const emit = defineEmits(["confirm", "back"]);
+
+// 從 selectedFlight 中獲取價格
+const seatPrice = computed(() => {
+    console.log('SeatCard - selectedFlight.value:', selectedFlight.value);
+    console.log('SeatCard - selectedFlight.value?.ticketPrice:', selectedFlight.value?.ticketPrice);
+    return selectedFlight.value?.ticketPrice ? `NT$ ${selectedFlight.value.ticketPrice.toLocaleString()}` : 'NT$ 0';
+});
 
 const confirmSeat = () => {
     emit("confirm");
@@ -53,9 +66,9 @@ const goBack = () => {
     right: 1rem;
     width: 300px;
     padding: 24px;
-    background-color: var(--color-neutral-bg-dark-blue);
+    background-color: var(--color-primary-dark-blue);
     /* 深藍背景 */
-    color: var(--color-neutral-navbar-text);
+    color: var(--color-primary-gold);
     /* 導覽列文字色作為亮色 */
     border-radius: 20px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
@@ -69,12 +82,14 @@ const goBack = () => {
     justify-content: space-around;
     height: 110px;
 }
-.seat-info p{
-  margin: 0;
+
+.seat-info p {
+    margin: 0;
 }
+
 .seat-number {
     font-size: 3rem;
-    color: var(--color-primary-button-brown);
+    color: var(--color-primary-brown);
     /* 按鈕咖啡色 */
 }
 
@@ -82,14 +97,17 @@ const goBack = () => {
     font-size: 1.2rem;
 }
 
-/* 移除舊的 .seat-price 樣式 */
+
 
 /* 價格顯示容器 */
 .price-display-container {
     display: flex;
-    justify-content: center; /* 左右置中 */
-    margin-top: 20px; /* 與 seat-introduce 的間距 */
-    margin-bottom: 20px; /* 與 seat-actions 的間距 */
+    justify-content: center;
+    /* 左右置中 */
+    margin-top: 20px;
+    /* 與 seat-introduce 的間距 */
+    margin-bottom: 20px;
+    /* 與 seat-actions 的間距 */
 }
 
 /* 價格顯示樣式 (參考 BookingTicket.vue) */
@@ -99,15 +117,14 @@ const goBack = () => {
 }
 
 .price-display .currency {
-    font-size: 14px;
     font-weight: bold;
-    color: var(--color-neutral-navbar-text);
+    color: var(--color-primary-gold);
 }
 
 .price-display .amount {
     font-size: 32px;
     font-weight: bold;
-    color: var(--color-neutral-navbar-text);
+    color: var(--color-primary-gold);
     margin: 0 4px;
 }
 
@@ -138,7 +155,7 @@ const goBack = () => {
 }
 
 .btn.confirm {
-    background-color: var(--color-primary-button-brown);
+    background-color: var(--color-primary-brown);
     color: var(--color-neutral-form-bg-white);
 }
 
@@ -150,8 +167,8 @@ const goBack = () => {
 
 .btn.back {
     background-color: transparent;
-    border: 1px solid var(--color-neutral-navbar-text);
-    color: var(--color-neutral-navbar-text);
+    border: 1px solid var(--color-primary-gold);
+    color: var(--color-primary-gold);
 }
 
 .btn.back:hover {

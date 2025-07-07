@@ -15,7 +15,7 @@
     max-width: 1318px;
     width: 100%;
     height: 54px;
-    background-color: var(--color-neutral-bg-dark-blue);
+    background-color: var(--color-primary-dark-blue);
     padding: 0.3rem 1rem;
 }
 

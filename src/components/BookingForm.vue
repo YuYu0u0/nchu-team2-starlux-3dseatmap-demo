@@ -36,7 +36,8 @@
         <div class="form-group">
           <label for="departure-date">出發日期</label>
           <div class="input-with-icon">
-            <input type="date" id="departure-date" class="form-input" placeholder="請選擇日期" ref="dateInputRef" v-model="departureDate">
+            <input type="date" id="departure-date" class="form-input" placeholder="請選擇日期" ref="dateInputRef"
+              v-model="departureDate">
             <span class="icon calendar-icon" @click="triggerDatePicker">📅</span>
           </div>
           <p v-if="formErrors.departureDate" class="error-message">請選擇出發日期。</p>
@@ -47,7 +48,7 @@
           <label for="cabin-class">選擇艙等</label>
           <select id="cabin-class" class="form-input" v-model="cabinClass">
             <option value="economy">經濟艙</option>
-            <option value="business">商務艙</option>
+            <option value="premiumEconomy">豪華經濟艙</option>
             <option value="first">頭等艙</option>
           </select>
         </div>
@@ -60,7 +61,7 @@
 
         <!-- 右下: 注意事項連結 (新版) -->
         <div class="form-group info-link-container">
-          <router-link to="/notes-for-child" class="info-link">
+          <router-link to="/notes-for-child" class="info-link f5">
             <span class="icon info-icon">ⓘ</span>
             <span>嬰兒及兒童注意事項</span>
           </router-link>
@@ -76,12 +77,8 @@
     </div>
 
     <!-- 地點選擇彈跳視窗 (新版) -->
-    <LocationModal
-      v-if="isLocationModalVisible"
-      :title="locationModalTitle"
-      @close="isLocationModalVisible = false"
-      @select="handleLocationSelect"
-    />
+    <LocationModal v-if="isLocationModalVisible" :title="locationModalTitle" @close="isLocationModalVisible = false"
+      @select="handleLocationSelect" />
 
   </div>
 
@@ -180,8 +177,8 @@ const handleSearch = () => {
   }
 
   const bookingDetails = {
-    origin: originLocation.value.code,
-    destination: destinationLocation.value.code,
+    origin: originLocation.value,
+    destination: destinationLocation.value,
     tripType: tripType.value,
     departureDate: departureDate.value,
     cabinClass: cabinClass.value,
@@ -215,7 +212,7 @@ onMounted(() => {
 <style scoped>
 /* 表單外層容器 */
 .form-wrapper {
-  background-color: var(--color-background);
+  background-color: var(--color-neutral-form-bg-white);
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -247,8 +244,10 @@ onMounted(() => {
 /* 地點選擇器容器 */
 .location-selector-container-out {
   display: flex;
-  flex-direction: column; /* 修改為垂直排列，以便錯誤訊息顯示 */
-  align-items: flex-start; /* 垂直置中 */
+  flex-direction: column;
+  /* 修改為垂直排列，以便錯誤訊息顯示 */
+  align-items: flex-start;
+  /* 垂直置中 */
   flex-grow: 1;
   /* 讓它佔滿可用空間 */
 }
@@ -264,7 +263,8 @@ onMounted(() => {
   background-color: var(--color-neutral-form-bg-white);
   height: 100px;
   /* 固定高度 */
-  width: 100%; /* 確保佔滿父容器寬度 */
+  width: 100%;
+  /* 確保佔滿父容器寬度 */
 }
 
 .location-item {
@@ -276,7 +276,7 @@ onMounted(() => {
   padding: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  color: var(--color-neutral-text);
+  color: var(--color-primary-brown);
   /* 使用暖棕色文字 */
 }
 
@@ -292,7 +292,6 @@ onMounted(() => {
 }
 
 .location-prompt {
-  font-size: 14px;
   color: #888;
   /* 稍淺的顏色 */
 }
@@ -317,7 +316,7 @@ onMounted(() => {
 .swap-icon {
   font-size: 28px;
   /* 較大的圖示 */
-  color: var(--color-neutral-text);
+  color: var(--color-primary-brown);
   /* 暖棕色 */
   font-weight: bold;
 }
@@ -420,7 +419,6 @@ select.form-input {
   cursor: pointer;
   color: #007bff;
   padding: 0;
-  font-size: 14px;
 }
 
 .info-link:hover {

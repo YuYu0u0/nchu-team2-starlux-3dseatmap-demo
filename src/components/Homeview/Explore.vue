@@ -83,24 +83,24 @@ button {
 
 <script setup>
 import { ref, computed } from 'vue'
-
+const baseUrl = import.meta.env.BASE_URL;
 const spots = [
-    { name: '台北', image: `${import.meta.env.BASE_URL}image/city/Taipei.jpg` },
-    { name: '洛杉磯', image: `${import.meta.env.BASE_URL}image/city/LosAngeles.jpg` },
-    { name: '東京', image: `${import.meta.env.BASE_URL}image/city/Tokyo.jpg` },
-    { name: '台中', image: `${import.meta.env.BASE_URL}image/city/Taichung.jpg` },
-    { name: '曼谷', image: `${import.meta.env.BASE_URL}image/city/Bangkok.jpg` },
-    { name: '宮古島', image: `${import.meta.env.BASE_URL}image/city/Miyako-jima.jpg` },
-    { name: '安大略', image: `${import.meta.env.BASE_URL}image/city/Ontario.jpg` },
-    { name: '雅加達', image: `${import.meta.env.BASE_URL}image/city/Jakarta.jpg` },
-    { name: '香港', image: `${import.meta.env.BASE_URL}image/city/HongKong.jpg` },
-    { name: '西雅圖', image: `${import.meta.env.BASE_URL}image/city/Seattle.jpg` },
-    { name: '富國島', image: `${import.meta.env.BASE_URL}image/city/PhuQuoc.jpg` },
-    { name: '清邁', image: `${import.meta.env.BASE_URL}image/city/ChiangMai.jpg` },
-    { name: '舊金山', image: `${import.meta.env.BASE_URL}image/city/SanFrancisco.jpg` },
-    { name: '札幌', image: `${import.meta.env.BASE_URL}image/city/Sapporo.jpg` },
-    { name: '新加坡', image: `${import.meta.env.BASE_URL}image/city/Singapore.jpg` },
-    { name: '大阪', image: `${import.meta.env.BASE_URL}image/city/Osaka.jpg` },
+    { name: '台北', image: `${baseUrl}image/city/Taipei.jpg` },
+    { name: '洛杉磯', image: `${baseUrl}image/city/LosAngeles.jpg` },
+    { name: '東京', image: `${baseUrl}image/city/Tokyo.jpg` },
+    { name: '台中', image: `${baseUrl}image/city/Taichung.jpg` },
+    { name: '曼谷', image: `${baseUrl}image/city/Bangkok.jpg` },
+    { name: '宮古島', image: `${baseUrl}image/city/Miyako-jima.jpg` },
+    { name: '安大略', image: `${baseUrl}image/city/Ontario.jpg` },
+    { name: '雅加達', image: `${baseUrl}image/city/Jakarta.jpg` },
+    { name: '香港', image: `${baseUrl}image/city/HongKong.jpg` },
+    { name: '西雅圖', image: `${baseUrl}image/city/Seattle.jpg` },
+    { name: '富國島', image: `${baseUrl}image/city/PhuQuoc.jpg` },
+    { name: '清邁', image: `${baseUrl}image/city/ChiangMai.jpg` },
+    { name: '舊金山', image: `${baseUrl}image/city/SanFrancisco.jpg` },
+    { name: '札幌', image: `${baseUrl}image/city/Sapporo.jpg` },
+    { name: '新加坡', image: `${baseUrl}image/city/Singapore.jpg` },
+    { name: '大阪', image: `${baseUrl}image/city/Osaka.jpg` },
 ];
 
 

@@ -96,12 +96,6 @@ footer.container-fluid {
     margin-top: 1.5rem;
 }
 
-.section-title {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-size: 14px;
-    color: white;
-}
 
 .icon-group {
     display: flex;

@@ -13,23 +13,15 @@
 
       <div class="location-picker-body">
         <nav class="sidebar">
-          <button
-            v-for="region in regions"
-            :key="region"
-            :class="{ 'nav-item': true, 'active': selectedRegion === region }"
-            @click="selectedRegion = region"
-          >
+          <button v-for="region in regions" :key="region"
+            :class="{ 'nav-item': true, 'active': selectedRegion === region }" @click="selectedRegion = region">
             {{ region }}
           </button>
         </nav>
         <div class="content-view">
           <ul class="airport-list">
-            <li
-              v-for="airport in filteredAirports"
-              :key="airport.code"
-              class="airport-item"
-              @click="selectAirport(airport)"
-            >
+            <li v-for="airport in filteredAirports" :key="airport.code" class="airport-item"
+              @click="selectAirport(airport)">
               <div class="airport-details">
                 <span class="airport-city f3">{{ airport.city }}, {{ airport.country }}</span>
                 <span class="airport-fullname f5">{{ airport.fullName }}</span>
@@ -111,10 +103,12 @@ const selectAirport = (airport) => {
 
 .modal-content {
   position: relative;
-  background: var(--color-neutral-form-bg-white); /* 溫暖的米白色背景 */
+  background: var(--color-neutral-form-bg-white);
+  /* 溫暖的米白色背景 */
   padding: 30px;
   border-radius: 8px;
-  max-width: 900px; /* 增加最大寬度 */
+  max-width: 900px;
+  /* 增加最大寬度 */
   width: 90%;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   display: flex;
@@ -129,7 +123,8 @@ const selectAirport = (airport) => {
   border: none;
   font-size: 28px;
   line-height: 1;
-  color: var(--color-neutral-border); /* 使用中性色邊框 */
+  color: var(--color-neutral-border);
+  /* 使用中性色邊框 */
   cursor: pointer;
   padding: 0;
   transition: color 0.2s;
@@ -140,7 +135,8 @@ const selectAirport = (airport) => {
 }
 
 .modal-title {
-  color: var(--color-primary-obsidian-gray); /* 深色標題 */
+  color: var(--color-primary-obsidian-gray);
+  /* 深色標題 */
   margin-bottom: 20px;
   text-align: center;
 }
@@ -153,15 +149,17 @@ const selectAirport = (airport) => {
 
 .search-input {
   width: 100%;
-  padding: 10px 40px 10px 15px; /* 為圖示留出空間 */
+  padding: 10px 40px 10px 15px;
+  /* 為圖示留出空間 */
   border: 1px solid var(--color-neutral-border);
   border-radius: 4px;
-  background-color: var(--color-neutral-form-bg-light-orange); /* 淺膚色背景 */
+  background-color: var(--color-neutral-form-bg-light-orange);
+  /* 淺膚色背景 */
   color: var(--color-primary-obsidian-gray);
 }
 
 .search-input::placeholder {
-  color: var(--color-neutral-text);
+  color: var(--color-primary-brown);
 }
 
 .search-icon {
@@ -171,7 +169,8 @@ const selectAirport = (airport) => {
   transform: translateY(-50%);
   width: 20px;
   height: 20px;
-  filter: invert(25%) sepia(15%) saturate(1000%) hue-rotate(330deg) brightness(90%) contrast(80%); /* 調整為棕色 */
+  filter: invert(25%) sepia(15%) saturate(1000%) hue-rotate(330deg) brightness(90%) contrast(80%);
+  /* 調整為棕色 */
 }
 
 /* 兩欄式佈局 */
@@ -184,10 +183,12 @@ const selectAirport = (airport) => {
 }
 
 .sidebar {
-  flex: 0 0 200px; /* 固定寬度 */
+  flex: 0 0 200px;
+  /* 固定寬度 */
   display: flex;
   flex-direction: column;
-  background-color: var(--color-neutral-form-bg-light-orange); /* 淺膚色背景 */
+  background-color: var(--color-neutral-form-bg-light-orange);
+  /* 淺膚色背景 */
   border-right: 1px solid var(--color-neutral-border);
   padding: 10px 0;
 }
@@ -198,27 +199,34 @@ const selectAirport = (airport) => {
   background: transparent;
   text-align: left;
   cursor: pointer;
-  color: var(--color-primary-obsidian-gray); /* 深色文字 */
+  color: var(--color-primary-obsidian-gray);
+  /* 深色文字 */
   font-size: 16px;
   transition: background-color 0.2s, color 0.2s;
 }
 
 .sidebar .nav-item:hover {
-  background-color: var(--color-neutral-lower-form-brown); /* 灰褐色懸停 */
-  color: var(--color-neutral-form-bg-white); /* 白色文字 */
+  background-color: var(--color-neutral-lower-form-brown);
+  /* 灰褐色懸停 */
+  color: var(--color-neutral-form-bg-white);
+  /* 白色文字 */
 }
 
 .sidebar .nav-item.active {
-  background-color: var(--color-neutral-lower-form-brown); /* 灰褐色選中 */
-  color: var(--color-neutral-form-bg-white); /* 白色文字 */
+  background-color: var(--color-neutral-lower-form-brown);
+  /* 灰褐色選中 */
+  color: var(--color-neutral-form-bg-white);
+  /* 白色文字 */
   font-weight: bold;
 }
 
 .content-view {
   flex: 1;
   padding: 20px;
-  background-color: var(--color-neutral-form-bg-white); /* 米白色背景 */
-  overflow-y: auto; /* 內容可滾動 */
+  background-color: var(--color-neutral-form-bg-white);
+  /* 米白色背景 */
+  overflow-y: auto;
+  /* 內容可滾動 */
 }
 
 .airport-list {
@@ -239,14 +247,17 @@ const selectAirport = (airport) => {
 }
 
 .airport-item:hover {
-  background-color: var(--color-neutral-lower-form-brown); /* 灰褐色懸停 */
-  color: var(--color-neutral-form-bg-white); /* 白色文字 */
+  background-color: var(--color-neutral-lower-form-brown);
+  /* 灰褐色懸停 */
+  color: var(--color-neutral-form-bg-white);
+  /* 白色文字 */
 }
 
 .airport-item:hover .airport-city,
 .airport-item:hover .airport-fullname,
 .airport-item:hover .airport-code {
-  color: var(--color-neutral-form-bg-white); /* 懸停時文字變白 */
+  color: var(--color-neutral-form-bg-white);
+  /* 懸停時文字變白 */
 }
 
 .airport-details {
@@ -256,18 +267,22 @@ const selectAirport = (airport) => {
 }
 
 .airport-city {
-  color: var(--color-primary-obsidian-gray); /* 深色城市名 */
+  color: var(--color-primary-obsidian-gray);
+  /* 深色城市名 */
   font-weight: bold;
 }
 
 .airport-fullname {
-  color: var(--color-neutral-text); /* 暖棕色全名 */
+  color: var(--color-primary-brown);
+  /* 暖棕色全名 */
   margin-top: 4px;
 }
 
 .airport-code {
-  color: var(--color-primary-button-brown); /* 暖棕色機場代碼 */
+  color: var(--color-primary-brown);
+  /* 暖棕色機場代碼 */
   font-weight: bold;
-  margin-left: 20px; /* 留白 */
+  margin-left: 20px;
+  /* 留白 */
 }
 </style>

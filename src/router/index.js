@@ -3,7 +3,7 @@ import HomeView from "@/views/HomeView.vue";
 import BookingView from "@/views/BookingView.vue";
 import SearchResultView from "@/views/SearchResultView.vue";
 import Select3DViewEconomy from "@/views/Select3DViewEconomy.vue";
-import Select3DViewBusiness from "@/views/Select3DViewBusiness.vue";
+import Select3DViewPremiumEconomy from "@/views/Select3DViewPremiumEconomy.vue";
 import Select3DViewFirst from "@/views/Select3DViewFirst.vue";
 
 import NoteForChild from "@/components/PopUpWindow/NoteForChild.vue";
@@ -12,6 +12,10 @@ import OrderConfirmationView from "@/views/OrderConfirmationView.vue";
 
 import CommingSoonView from "@/views/CommingSoonView.vue";
 import EquipmentView from "@/views/EquipmentView.vue";
+import AnnouncementView from "@/views/AnnouncementView.vue"
+import MembershipView from "@/views/MembershipView.vue"
+import PassengerFaqView from "@/views/PassengerFaqView.vue"
+import FlightStatusView from "@/views/FlightStatusView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,9 +41,9 @@ const router = createRouter({
       component: Select3DViewEconomy,
     },
     {
-      path: "/select-seat/business",
-      name: "select-seat-business",
-      component: Select3DViewBusiness,
+      path: "/select-seat/premium-economy",
+      name: "select-seat-premium-economy",
+      component: Select3DViewPremiumEconomy,
     },
     {
       path: "/select-seat/first",
@@ -70,6 +74,26 @@ const router = createRouter({
       path: "/equipment",
       name: "equipment",
       component: EquipmentView,
+    },
+    {
+      path: "/announcement",
+      name: "announcement",
+      component: AnnouncementView,
+    },
+    {
+      path: "/membership",
+      name: "membership",
+      component: MembershipView,
+    },
+    {
+      path: "/passengerfaq",
+      name: "passengerfaq",
+      component: PassengerFaqView,
+    },
+    {
+      path: "/flightstatus",
+      name: "flightstatus",
+      component: FlightStatusView,
     },
   ],
   scrollBehavior(to, from, savedPosition) {

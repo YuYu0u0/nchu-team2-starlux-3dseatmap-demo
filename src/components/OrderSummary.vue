@@ -4,8 +4,8 @@
     <div class="summary-section">
       <h3>預訂資訊</h3>
       <p v-if="orderStore.bookingDetails">
-        出發地: {{ orderStore.bookingDetails.origin }}<br>
-        目的地: {{ orderStore.bookingDetails.destination }}<br>
+        出發地: {{ orderStore.bookingDetails.origin.city }} ({{ orderStore.bookingDetails.origin.code }})<br>
+        目的地: {{ orderStore.bookingDetails.destination.city }} ({{ orderStore.bookingDetails.destination.code }})<br>
         行程類型: {{ tripTypeDisplay }}<br>
         出發日期: {{ orderStore.bookingDetails.departureDate }}<br>
         優惠代碼: {{ orderStore.bookingDetails.promoCode }}
@@ -15,10 +15,10 @@
 
     <div class="summary-section">
       <h3>選位資訊</h3>
-      <p v-if="orderStore.seatDetails">
+      <p v-if="orderStore.seatDetails && orderStore.selectedFlight">
         座位號: {{ orderStore.seatDetails.title }}<br>
         艙等: {{ orderStore.seatDetails.class }}<br>
-        價格: NT$ {{ orderStore.seatDetails.price.toLocaleString() }}
+        價格: NT$ {{ orderStore.selectedFlight.ticketPrice.toLocaleString() }}
       </p>
       <p v-else>無選位資訊</p>
     </div>
@@ -36,8 +36,8 @@
     </div>
 
     <div class="order-actions">
-      <button class="btn cancel-button" @click="handleCancelOrder">取消訂單</button>
-      <button class="btn complete-button" @click="handleCompleteOrder">完成訂購</button>
+      <button class="btn cancel-button f4" @click="handleCancelOrder">取消訂單</button>
+      <button class="btn complete-button f4" @click="handleCompleteOrder">完成訂購</button>
     </div>
 
     <!-- 訂購完成彈出視窗 -->
@@ -84,7 +84,7 @@ const tripTypeDisplay = computed(() => {
 
 <style scoped>
 .order-summary-container {
-  background-color: var(--color-background);
+  background-color: var(--color-neutral-form-bg-white);
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -105,7 +105,7 @@ const tripTypeDisplay = computed(() => {
 }
 
 .summary-section h3 {
-  color: var(--color-primary-button-brown);
+  color: var(--color-primary-brown);
   margin-top: 0;
   margin-bottom: 10px;
 }
@@ -126,7 +126,6 @@ const tripTypeDisplay = computed(() => {
   height: 40px;
   border: none;
   border-radius: 4px;
-  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
   transition: opacity 0.3s;
@@ -142,7 +141,7 @@ const tripTypeDisplay = computed(() => {
 }
 
 .complete-button {
-  background-color: var(--color-primary-button-brown);
+  background-color: var(--color-primary-brown);
   color: #FFFFFF;
 }
 

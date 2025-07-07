@@ -58,7 +58,7 @@ const closeNote = () => {
 .modal-content {
   position: relative;
   /* 為了讓 X 按鈕可以絕對定位 */
-  background: var(--color-background);
+  background: var(--color-neutral-form-bg-white);
   padding: 30px 40px;
   border-radius: 8px;
   max-width: 600px;

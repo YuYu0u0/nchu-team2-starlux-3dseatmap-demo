@@ -20,7 +20,7 @@
     width: 400px;
     height: 40px;
     background-color: #08202d;
-    color: var(--color-neutral-navbar-text);
+    color: var(--color-primary-gold);
     border-radius: 9999px;
     border: none;
 }

@@ -4,7 +4,7 @@
     <!-- 左側主要區塊 -->
     <div class="left-panel">
       <!-- 1. 航班號 & 航程時間 -->
-      <div class="info-row flight-info">
+      <div class="info-row flight-info f5">
         <div class="flight-number">機號 {{ flight.flightNumber }}・機型 {{ flight.aircraftType }}</div>
         <div class="flight-duration">飛行時間: {{ flight.duration }}</div>
       </div>
@@ -12,20 +12,20 @@
       <!-- 2. 起飛 & 降落時間 -->
       <div class="info-row time-info">
         <div class="time-block departure-time">
-          <span class="date">{{ flight.departureDate }}</span>
+          <span class="date f5">{{ flight.departureDate }}</span>
           <span class="time">{{ flight.departureTime }}</span>
         </div>
         <div class="time-block arrival-time">
-          <span class="date">{{ flight.arrivalDate }}</span>
+          <span class="date f5">{{ flight.arrivalDate }}</span>
           <span class="time">{{ flight.arrivalTime }}</span>
         </div>
       </div>
 
       <!-- 3. 機場代碼 & 時間軸 -->
       <div class="info-row timeline-info">
-        <span class="airport-code">{{ flight.originCode }}</span>
+        <span class="airport-code f3">{{ flight.originCode }}</span>
         <div class="timeline-line"></div>
-        <span class="airport-code">{{ flight.destinationCode }}</span>
+        <span class="airport-code f3">{{ flight.destinationCode }}</span>
       </div>
     </div>
 
@@ -36,15 +36,16 @@
         <div class="price-content">
           <div class="class-name">{{ cabinClassDisplay }}</div>
           <div class="price-display">
-            <span class="currency">TWD</span>
+            <span class="currency f5">TWD</span>
+            <span v-if="flight.isSpecialOffer" class="special-offer-tag">特價</span>
             <span class="amount">{{ ticketPrice.toLocaleString() }}</span>
-            <span class="suffix">起</span>
+            <span class="suffix f5">起</span>
           </div>
         </div>
       </div>
       <div class="select-seat-section">
         <!-- 選位按鈕 -->
-        <router-link :to="{ name: selectSeatRouteName, query: { flightId: flight.id, cabinClass: cabinClass } }">
+        <router-link :to="{ name: selectSeatRouteName }" @click="selectFlight">
           <button class="select-seat-button">選位</button>
         </router-link>
       </div>
@@ -54,6 +55,9 @@
 
 <script setup>
 import { computed } from 'vue';
+import { useOrderStore } from '@/stores/order';
+
+const orderStore = useOrderStore();
 
 const props = defineProps({
   flight: {
@@ -70,6 +74,8 @@ const props = defineProps({
       arrivalTime: '',
       originCode: '',
       destinationCode: '',
+      ticketPrice: 0, // 價格從 flight prop 傳入
+      isSpecialOffer: false, // 特價標註從 flight prop 傳入
     }),
   },
   cabinClass: {
@@ -78,20 +84,14 @@ const props = defineProps({
   },
 });
 
-const cabinClassPrices = {
-  economy: 8000,
-  business: 24000,
-  first: 66000,
-};
-
 const cabinClassDisplayMap = {
   economy: '經濟艙',
-  business: '商務艙',
+  premiumEconomy: '豪華經濟艙',
   first: '頭等艙',
 };
 
 const ticketPrice = computed(() => {
-  return cabinClassPrices[props.cabinClass] || 0;
+  return props.flight.ticketPrice;
 });
 
 const cabinClassDisplay = computed(() => {
@@ -99,8 +99,14 @@ const cabinClassDisplay = computed(() => {
 });
 
 const selectSeatRouteName = computed(() => {
-  return `select-seat-${props.cabinClass}`;
+  // 將 camelCase 轉換為 kebab-case
+  const kebabCaseCabinClass = props.cabinClass.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
+  return `select-seat-${kebabCaseCabinClass}`;
 });
+
+const selectFlight = () => {
+  orderStore.setSelectedFlight({ ...props.flight, cabinClass: props.cabinClass });
+};
 </script>
 
 <style scoped>
@@ -136,13 +142,11 @@ const selectSeatRouteName = computed(() => {
 
 /* 1. 航班號 & 航程時間 */
 .flight-info {
-  font-size: 14px;
   color: #555;
 }
 
 /* 2. 起飛 & 降落時間 */
 .time-block .date {
-  font-size: 14px;
   color: #666;
   display: block;
 }
@@ -163,7 +167,6 @@ const selectSeatRouteName = computed(() => {
 }
 
 .airport-code {
-  font-size: 20px;
   font-weight: bold;
   color: #444;
 }
@@ -224,7 +227,6 @@ const selectSeatRouteName = computed(() => {
 
 .price-display .currency,
 .price-display .suffix {
-  font-size: 14px;
   font-weight: bold;
   color: #666;
 }
@@ -252,5 +254,15 @@ const selectSeatRouteName = computed(() => {
 
 .select-seat-button:hover {
   opacity: 0.9;
+}
+
+.special-offer-tag {
+  background-color: #d9534f;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  margin-left: 8px;
+  white-space: nowrap;
 }
 </style>

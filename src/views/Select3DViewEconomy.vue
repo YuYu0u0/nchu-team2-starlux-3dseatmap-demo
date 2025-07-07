@@ -1,8 +1,9 @@
 <template>
   <div class="page-container">
+    <LoadingAnimation v-if="isLoading" />
 
     <!-- Main 內容區塊 -->
-    <main class="container-fluid">
+    <main class="container-fluid" v-show="!isLoading">
       <div class="viewer-container" ref="viewerContainer">
         <!-- 3D 渲染畫布將會被掛載到這裡 -->
         <canvas ref="threeCanvas"></canvas>
@@ -35,11 +36,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import { useRouter, useRoute } from 'vue-router'; // 導入 useRoute
 import { useOrderStore } from '@/stores/order';
 import FooterTop from '@/components/FooterView/FooterTop.vue'
 import FooterBottom from '@/components/FooterView/FooterBottom.vue';
+import LoadingAnimation from '@/components/LoadingAnimation.vue';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -47,6 +49,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 // --- 全域變數 ---
 let scene, camera, renderer, controls, animationFrameId, raycaster, mouse; // Three.js 核心變數
 let isAnimatingCamera = false; // 用於追蹤鏡頭動畫狀態的旗標
+let roofObject = null; // 儲存屋頂物件的參照
+let roofObjectOriginalParent = null; // 新增：儲存屋頂物件的原始父物件
 const targetPosition = new THREE.Vector3(); // 儲存運鏡的目標攝影機位置
 const targetLookAt = new THREE.Vector3(); // 儲存運鏡的目標觀察點
 let initialCameraPosition = new THREE.Vector3(); // 儲存初始攝影機位置
@@ -85,13 +89,13 @@ const flightId = route.query.flightId; // 從路由參數中獲取 flightId
 const cabinClass = route.query.cabinClass; // 從路由參數中獲取 cabinClass
 
 // --- 設定 ---
-const modelUrl = `${import.meta.env.BASE_URL}models/A350-economy-class.glb`; // 3D 模型檔案路徑
-const jpgUrl = `${import.meta.env.BASE_URL}image/HDRI.jpg`; // 背景圖片路徑
+const modelUrl = '/models/A350-economy-class.glb'; // 3D 模型檔案路徑
+const jpgUrl = '/image/HDRI.jpg'; // 背景圖片路徑
 
 // 艙等價格映射
 const cabinClassPrices = {
   economy: 8000,
-  business: 24000,
+  premiumEconomy: 24000,
   first: 66000,
 };
 
@@ -101,22 +105,22 @@ const cabinClassPrices = {
 // 以物件/群組名稱為鍵，儲存其對應的運鏡目標與資訊卡內容
 const cameraTargets = {
   'EC_35C': {
-    position: new THREE.Vector3(0.6, 1.4, -14.5),
-    target: new THREE.Vector3(0.6, 1.54, 2.5),
+    position: new THREE.Vector3(0.6, 1.3, -14.5),
+    target: new THREE.Vector3(0.6, 1.3, 2.5),
     title: '35C',
     class: "經濟艙",
     text: '此座位位於走道旁，讓您進出更加方便，是享受舒適腿部空間的理想選擇。'
   },
   'EC_37E': {
-    position: new THREE.Vector3(-0.42, 1.4, -15.3),
-    target: new THREE.Vector3(-0.42, 1.54, 2.5),
+    position: new THREE.Vector3(-0.45, 1.3, -15.3),
+    target: new THREE.Vector3(-0.45, 1.3, 2.5),
     title: '37E',
     class: "經濟艙",
     text: '此座位位於中央區域，適合與家人或朋友同行的旅客，方便您在旅途中輕鬆交流。'
   },
   'EC_38H': {
-    position: new THREE.Vector3(-1.4, 1.4, -16),
-    target: new THREE.Vector3(-1.4, 1.54, 2.5),
+    position: new THREE.Vector3(-1.48, 1.3, -16),
+    target: new THREE.Vector3(-1.48, 1.3, 2.5),
     title: '38H',
     class: "經濟艙",
     text: '此座位位於走道旁，讓您進出更加方便，是享受舒適腿部空間的理想選擇。'
@@ -212,14 +216,34 @@ const loadModel = () => {
   const loader = new GLTFLoader();
   loader.load(modelUrl, (gltf) => {
     const model = gltf.scene;
+    scene.add(model); // 先將模型加入場景
+
+    // 遍歷模型中的所有物件，尋找名為 'A350_roof' 的 Mesh
+    model.traverse((child) => {
+      if (child.isMesh && child.name === 'A350_roof') {
+        roofObject = child;
+        roofObjectOriginalParent = child.parent;
+        // 初始時將屋頂從場景中移除
+        if (roofObjectOriginalParent) {
+          roofObjectOriginalParent.remove(roofObject);
+        }
+      }
+    });
+
     model.traverse((child) => {
       if (child.isMesh) {
         child.castShadow = true; // 允許投射陰影
         child.receiveShadow = true; // 允許接收陰影
       }
     });
-    scene.add(model); // 將載入的模型加入到場景中
     isLoading.value = false; // 所有資源都載入完成，隱藏提示
+    nextTick(() => {
+      onWindowResize(); // 確保在載入完成後重新調整渲染器尺寸
+    });
+    // 模型載入完成後，延遲顯示滾輪提示
+    scrollHintTimeout = setTimeout(() => {
+      showScrollHint.value = true;
+    }, 3000);
   }, undefined, (error) => {
     console.error('模型載入失敗:', error);
     isLoading.value = false;
@@ -256,19 +280,17 @@ const onCanvasClick = (event) => {
 
     // 向上遍歷父層級，直到找到白名單中的物件或到達頂層
     while (currentObject) {
-      // 輸出點擊物件的詳細資訊，包含父子層級
-      console.log('Clicked object:', currentObject);
-      if (currentObject.parent) {
-        console.log('Parent of clicked object:', currentObject.parent);
-      }
-      if (currentObject.children && currentObject.children.length > 0) {
-        console.log('Children of clicked object:', currentObject.children);
-      }
+      
 
       if (cameraTargets[currentObject.name]) { // 檢查名稱是否存在於資料庫
         const targetData = cameraTargets[currentObject.name];
         animateCameraTo(targetData.position, targetData.target); // 觸發運鏡動畫
         selectedTargetData.value = { ...targetData, price: cabinClassPrices[cabinClass] || 0 }; // 更新狀態以顯示資訊小卡，並帶入價格
+
+        // 顯示屋頂 Mesh
+        if (roofObject && roofObjectOriginalParent) {
+          roofObjectOriginalParent.add(roofObject);
+        }
         break; // 成功找到並觸發後，跳出迴圈
       }
       currentObject = currentObject.parent; // 繼續向上查找
@@ -297,6 +319,11 @@ const resetCameraView = () => {
   selectedTargetData.value = null; // 清空選中數據，隱藏資訊小卡
   showDragHint.value = false; // 返回初始視角時隱藏提示
   clearTimeout(dragHintTimeout); // 清除拖曳提示的計時器
+
+  // 隱藏屋頂 Mesh
+  if (roofObject && roofObjectOriginalParent) {
+    roofObjectOriginalParent.remove(roofObject);
+  }
 
   // 延遲顯示滾輪提示
   scrollHintTimeout = setTimeout(() => {
@@ -491,10 +518,6 @@ const onCustomMouseUp = () => {
  */
 onMounted(() => {
   initThreeScene();
-  // 初始加載後，延遲顯示滾輪提示
-  scrollHintTimeout = setTimeout(() => {
-    showScrollHint.value = true;
-  }, 3000);
 });
 
 /**
@@ -527,9 +550,7 @@ function handleConfirm() {
   router.push('/payment-method');
 }
 
-function handleBack() {
-  console.log("返回選位頁！");
-}
+
 </script>
 
 <style scoped>

@@ -1,8 +1,9 @@
 <template>
   <div class="page-container">
+    <LoadingAnimation v-if="isLoading" />
 
     <!-- Main 內容區塊 -->
-    <main class="container-fluid">
+    <main class="container-fluid" v-show="!isLoading">
       <div class="viewer-container" ref="viewerContainer">
         <!-- 3D 渲染畫布將會被掛載到這裡 -->
         <canvas ref="threeCanvas"></canvas>
@@ -31,11 +32,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import { useRouter, useRoute } from 'vue-router'; // 導入 useRoute
 import { useOrderStore } from '@/stores/order';
 import FooterTop from '@/components/FooterView/FooterTop.vue'
 import FooterBottom from '@/components/FooterView/FooterBottom.vue';
+import LoadingAnimation from '@/components/LoadingAnimation.vue';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -80,13 +82,13 @@ const flightId = route.query.flightId; // 從路由參數中獲取 flightId
 const cabinClass = route.query.cabinClass; // 從路由參數中獲取 cabinClass
 
 // --- 設定 ---
-const modelUrl = `${import.meta.env.BASE_URL}models/A350-first-class.glb`; // 3D 模型檔案路徑
-const jpgUrl = `${import.meta.env.BASE_URL}image/HDRI.jpg`; // 背景圖片路徑
+const modelUrl = '/models/A350-first-class.glb'; // 3D 模型檔案路徑
+const jpgUrl = '/image/HDRI.jpg'; // 背景圖片路徑
 
 // 艙等價格映射
 const cabinClassPrices = {
   economy: 8000,
-  business: 24000,
+  premiumEconomy: 24000,
   first: 66000,
 };
 
@@ -96,7 +98,7 @@ const cabinClassPrices = {
 // 以物件/群組名稱為鍵，儲存其對應的運鏡目標與資訊卡內容
 const cameraTargets = {
   'FC_01A': {
-    position: new THREE.Vector3(0.88, 1.45, -1.29),
+    position: new THREE.Vector3(0.88, 1.45, -1.15),
     target: new THREE.Vector3(0.88, 1.2, -0.28),
     title: '01A',
     class: "頭等艙",
@@ -104,7 +106,7 @@ const cameraTargets = {
     link: '/seat-details/01A'
   },
   'FC_01D': {
-    position: new THREE.Vector3(-0.11, 1.45, -1.29),
+    position: new THREE.Vector3(-0.11, 1.45, -1.15),
     target: new THREE.Vector3(-0.53, 1.11, -0.19),
     title: '01D',
     class: "頭等艙",
@@ -112,7 +114,7 @@ const cameraTargets = {
     link: '/seat-details/01D'
   },
   'FC_01G': {
-    position: new THREE.Vector3(-0.9, 1.45, -1.29),
+    position: new THREE.Vector3(-0.9, 1.45, -1.15),
     target: new THREE.Vector3(-0.4, 0.98, 0.19),
     title: '01G',
     class: "頭等艙",
@@ -120,7 +122,7 @@ const cameraTargets = {
     link: '/seat-details/01G'
   },
   'FC_01K': {
-    position: new THREE.Vector3(-1.73, 1.45, -1.29),
+    position: new THREE.Vector3(-1.73, 1.45, -1.15),
     target: new THREE.Vector3(-2.16, 1.22, -0.71),
     title: '01K',
     class: "頭等艙",
@@ -242,6 +244,9 @@ const loadModel = () => {
     });
 
     isLoading.value = false;
+    nextTick(() => {
+      onWindowResize(); // 確保在載入完成後重新調整渲染器尺寸
+    });
   }, undefined, (error) => {
     console.error('模型載入失敗:', error);
     isLoading.value = false;
@@ -284,7 +289,7 @@ const onCanvasClick = (event) => {
         console.log('Clicked object world position:', currentObject.getWorldPosition(new THREE.Vector3()));
         animateCameraTo(targetData.position, targetData.target); // 觸發運鏡動畫
         selectedTargetData.value = { ...targetData, price: cabinClassPrices[cabinClass] || 0 }; // 更新狀態以顯示資訊小卡，並帶入價格
-
+        
         // 顯示屋頂 Mesh
         if (roofObject && roofObjectOriginalParent) {
           roofObjectOriginalParent.add(roofObject);
@@ -440,15 +445,15 @@ const onCustomMouseMove = (event) => {
   lastMouseX = event.clientX;
   lastMouseY = event.clientY;
 
-  // 計算從目標點到攝影機的向量
-  const targetToCamera = camera.position.clone().sub(controls.target);
+  // 計算從攝影機到目標點的向量
+  const cameraToTarget = controls.target.clone().sub(camera.position);
 
   // 創建一個旋轉四元數
   const quaternion = new THREE.Quaternion();
 
   // 水平旋轉 (繞 Y 軸)
   quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), -deltaX * rotationSpeed);
-  targetToCamera.applyQuaternion(quaternion);
+  cameraToTarget.applyQuaternion(quaternion);
 
   // 垂直旋轉 (繞攝影機的局部 X 軸)
   // 為了避免翻轉，需要計算攝影機的局部 X 軸
@@ -458,10 +463,10 @@ const onCustomMouseMove = (event) => {
   cameraXAxis.normalize(); // 正規化
 
   quaternion.setFromAxisAngle(cameraXAxis, -deltaY * rotationSpeed);
-  targetToCamera.applyQuaternion(quaternion);
+  cameraToTarget.applyQuaternion(quaternion);
 
-  // 更新攝影機位置
-  camera.position.copy(controls.target).add(targetToCamera);
+  // 更新目標點
+  controls.target.copy(camera.position).add(cameraToTarget);
 
   // 更新攝影機視角
   camera.lookAt(controls.target);
@@ -566,4 +571,5 @@ function handleBack() {
   /* 確保不阻擋滑鼠事件 */
   z-index: 10;
 }
+
 </style>

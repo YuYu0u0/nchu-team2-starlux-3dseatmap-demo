@@ -2,35 +2,27 @@
 :root {
   /* 主要色 (Primary) */
   --color-primary-obsidian-gray: #313944;
-  --color-primary-button-brown: #794425;
-
-  /* 次要色 (Secondary) */
-  --color-secondary-earth-gold: #86744c;
-  --color-secondary-rose-gold: #9c694c;
+  --color-primary-gold: #f9c78b;
+  --color-primary-brown: #794425;
+  --color-primary-dark-blue: #0f2d3c;
 
   /* 語意色 (Semantic) */
   --color-semantic-alert: #bb2f2f;
-  --color-semantic-success: #5e8c61;
-  --color-semantic-info: #4a6c8c;
 
   /* 中性色 (Neutral) */
-  --color-neutral-bg-dark-blue: #0f2d3c;
   --color-neutral-form-bg-white: #fff8f2;
   --color-neutral-form-bg-light-orange: #f7eae1;
   --color-neutral-lower-form-brown: #4e463f;
   --color-neutral-footer: #413b37;
-  --color-neutral-navbar-text: #f9c78b;
-  --color-neutral-text: #794425;
   --color-neutral-border: #767676;
 
   /* 按鈕狀態色 (Button States) */
   --color-button-hover: #7e7267;
 
   /* 全域通用語意橋接 (Global Semantic Bridge) */
-  --color-background: var(--color-neutral-form-bg-white); /* 預設使用表單背景(白)作為主要背景 */
-  --color-text: var(--color-neutral-text); /* 預設文字顏色 */
-  --color-border: var(--color-neutral-border); /* 預設邊框顏色 */
-  --color-heading: var(--color-primary-obsidian-gray); /* 標題顏色 */
+  --color-background: var(--color-primary-dark-blue); /* 預設背景 */
+  --color-text: var(--color-primary-brown); /* 預設文字 */
+  --color-border: var(--color-neutral-border); /* 預設邊框 */
 }
 
 *,

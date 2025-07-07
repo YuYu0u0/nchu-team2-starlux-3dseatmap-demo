@@ -35,14 +35,18 @@ import PaymentForm from '@/components/PaymentForm.vue';
 <style scoped>
 /* Main 區塊 */
 .main-top-bg {
-  height: 93px;
   display: flex;
   align-items: center;
   color: #ffffff;
+  padding: 20px 0; /* 增加上下內邊距 */
 }
 
 .main-bottom-bg {
-  height: 466px;
+  padding-bottom: 50px; /* 增加底部內邊距 */
+}
+
+main.container {
+  padding-bottom: 50px; /* 確保 main 元素底部有足夠間距 */
 }
 
 /* Footer 區塊 */

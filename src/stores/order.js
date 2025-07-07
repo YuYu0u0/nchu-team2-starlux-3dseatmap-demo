@@ -6,6 +6,7 @@ export const useOrderStore = defineStore('order', () => {
   const seatDetails = ref(null);
   const paymentDetails = ref(null);
   const fromHomepageSearch = ref(false); // 新增旗標
+  const selectedFlight = ref(null); // 新增選定航班資訊
 
   function setBookingDetails(details) {
     bookingDetails.value = details;
@@ -24,14 +25,21 @@ export const useOrderStore = defineStore('order', () => {
     fromHomepageSearch.value = value;
   }
 
+  // 新增一個 action 來設置選定航班資訊
+  function setSelectedFlight(flight) {
+    selectedFlight.value = flight;
+  }
+
   return {
     bookingDetails,
     seatDetails,
     paymentDetails,
-    fromHomepageSearch, // 導出旗標
+    fromHomepageSearch,
+    selectedFlight, // 導出選定航班資訊
     setBookingDetails,
     setSeatDetails,
     setPaymentDetails,
-    setFromHomepageSearch, // 導出 action
+    setFromHomepageSearch,
+    setSelectedFlight, // 導出 action
   };
 });

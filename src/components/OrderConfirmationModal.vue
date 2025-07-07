@@ -38,7 +38,7 @@ const goToHome = () => {
 }
 
 .modal-content {
-  background: var(--color-background);
+  background: var(--color-neutral-form-bg-white);
   padding: 40px;
   border-radius: 8px;
   max-width: 500px;
@@ -59,7 +59,7 @@ const goToHome = () => {
 
 .home-button {
   padding: 10px 20px;
-  background-color: var(--color-primary-button-brown);
+  background-color: var(--color-primary-brown);
   color: white;
   border: none;
   border-radius: 4px;

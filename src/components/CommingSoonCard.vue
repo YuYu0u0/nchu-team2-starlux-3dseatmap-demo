@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-const gifSrc = `${import.meta.env.BASE_URL}image/tomorin.gif`
+const gifSrc = '/image/tomorin.gif'
 </script>
 
 <style scoped>

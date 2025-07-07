@@ -28,5 +28,4 @@ import Navbar from '@/components/NavbarView/Navbar.vue';
 import FooterTop from '@/components/FooterView/FooterTop.vue'
 import FooterBottom from '@/components/FooterView/FooterBottom.vue';
 import CommingSoonCard from '@/components/CommingSoonCard.vue';
-
 </script>

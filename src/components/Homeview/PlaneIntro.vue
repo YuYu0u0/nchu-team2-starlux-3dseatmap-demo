@@ -20,7 +20,8 @@
             </div>
         </div>
         <div class="row justify-content-center gap-5 p-5">
-            <router-link to="/equipment" class="btn btn-outline-custom btn-lg col-5 col-md-4 col-lg-3 text-center py-3">
+            <router-link to="/equipment#threed-area"
+                class="btn btn-outline-custom btn-lg col-5 col-md-4 col-lg-3 text-center py-3">
                 設備介紹
             </router-link>
             <router-link to="/booking" class="btn btn-outline-custom btn-lg col-5 col-md-4 col-lg-3 text-center py-3">
@@ -32,11 +33,12 @@
 </template>
 
 <script setup>
+const baseUrl = import.meta.env.BASE_URL;
 const planes = [
     {
         name: "A321neo",
         description: "窄體客機，neo代表新引擎選項，提升燃油效率20%，噪音降低。常用於中短程航線，衍生型A321XLR可執行跨洋航線，座位約180-244位。",
-        image: `${import.meta.env.BASE_URL}image/airplane/A321neo.jpg`,
+        image: `${baseUrl}image/airplane/A321neo.jpg`,
         imageCredit: {
             author: "By BriYYZ from Toronto, Canada",
             url: "https://commons.wikimedia.org/w/index.php?curid=51240603",
@@ -46,7 +48,7 @@ const planes = [
     {
         name: "A330neo",
         description: "雙走道廣體客機，換裝新型勞斯萊斯引擎，燃油效率提升14%。適用於中長程航線，如A330-900neo可載287-465名乘客，航程可達7,350海浬。",
-        image: `${import.meta.env.BASE_URL}image/airplane/A330neo.jpg`,
+        image: `${baseUrl}image/airplane/A330neo.jpg`,
         imageCredit: {
             author: "By pjs2005 from Hampshire, UK",
             url: "https://commons.wikimedia.org/w/index.php?curid=70942421",
@@ -56,7 +58,7 @@ const planes = [
     {
         name: "A350-900",
         description: "全新設計的廣體客機，大量採用複合材料，搭載高效能勞斯萊斯引擎。專為中長程至超長程航線打造，約300-350個座位，航程可達8,100海浬，客艙舒適度極佳。",
-        image: `${import.meta.env.BASE_URL}image/airplane/A350-900.jpg`,
+        image: `${baseUrl}image/airplane/A350-900.jpg`,
         imageCredit: {
             author: "By Ken Fielding",
             url: "https://commons.wikimedia.org/w/index.php?curid=32256396",
@@ -86,12 +88,12 @@ const planes = [
 }
 
 .btn-outline-custom {
-    color: var(--color-neutral-navbar-text);
-    border-color: var(--color-neutral-navbar-text);
+    color: var(--color-primary-gold);
+    border-color: var(--color-primary-gold);
 }
 
 .btn-outline-custom:hover {
-    background-color: var(--color-neutral-navbar-text);
+    background-color: var(--color-primary-gold);
     color: #333;
 }
 </style>

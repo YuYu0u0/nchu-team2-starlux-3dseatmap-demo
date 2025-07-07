@@ -9,13 +9,13 @@
               <span class="location-title f5">{{ originLocation ? originLocation.city : '出發地' }}</span>
             </div>
             <div class="swap-icon-container" @click="swapLocations">
-              <span class="swap-icon">⇌</span>
+              <span class="swap-icon f3">⇌</span>
             </div>
             <div class="location-item" @click="openLocationModal('目的地')">
               <span class="location-title f5">{{ destinationLocation ? destinationLocation.city : '目的地' }}</span>
             </div>
           </div>
-          <p v-if="formErrors.origin || formErrors.destination" class="error-message">請選擇出發地和目的地。</p>
+          <p v-if="formErrors.origin || formErrors.destination" class="error-message f6">請選擇出發地和目的地。</p>
         </div>
 
         <!-- 日期選擇 -->
@@ -27,7 +27,7 @@
                 v-model="departureDate">
               <span class="icon calendar-icon" @click="triggerDatePicker">📅</span>
             </div>
-            <p v-if="formErrors.departureDate" class="error-message">請選擇出發日期。</p>
+            <p v-if="formErrors.departureDate" class="error-message f6">請選擇出發日期。</p>
           </div>
         </div>
 
@@ -124,11 +124,11 @@ const handleSearch = () => {
 
 <style scoped>
 .search-form {
-  background-color: var(--color-neutral-text);
+  background-color: var(--color-primary-brown);
 }
 
 .search-btn {
-  background-color: var(--color-neutral-bg-dark-blue);
+  background-color: var(--color-primary-dark-blue);
 }
 
 /* --- Start: 新增與修改的樣式 --- */
@@ -156,7 +156,7 @@ const handleSearch = () => {
   padding: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  color: var(--color-neutral-text);
+  color: var(--color-primary-brown);
 }
 
 .location-item:hover {
@@ -184,9 +184,8 @@ const handleSearch = () => {
 }
 
 .swap-icon {
-  font-size: 20px;
   /* 調整圖示大小 */
-  color: var(--color-neutral-text);
+  color: var(--color-primary-brown);
   font-weight: bold;
 }
 
@@ -216,7 +215,6 @@ const handleSearch = () => {
 /* 錯誤訊息樣式 */
 .error-message {
   color: var(--color-semantic-alert);
-  font-size: 12px;
   margin-top: 5px;
   margin-left: 5px;
 }

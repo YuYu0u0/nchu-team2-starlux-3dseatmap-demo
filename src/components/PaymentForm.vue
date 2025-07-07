@@ -6,37 +6,43 @@
         <!-- 信用卡號 -->
         <div class="form-group">
           <label for="card-number">信用卡號</label>
-          <input type="text" id="card-number" class="form-input" placeholder="XXXX XXXX XXXX XXXX">
+          <input type="text" id="card-number" class="form-input" placeholder="XXXX XXXX XXXX XXXX" v-model="cardNumber">
+          <p v-if="paymentFormErrors.cardNumber" class="error-message">請輸入信用卡號。</p>
         </div>
 
         <!-- 持卡人姓名 -->
         <div class="form-group">
           <label for="card-holder-name">持卡人姓名</label>
-          <input type="text" id="card-holder-name" class="form-input" placeholder="請輸入持卡人姓名">
+          <input type="text" id="card-holder-name" class="form-input" placeholder="請輸入持卡人姓名" v-model="cardHolderName">
+          <p v-if="paymentFormErrors.cardHolderName" class="error-message">請輸入持卡人姓名。</p>
         </div>
 
         <!-- 有效日期 -->
         <div class="form-group">
           <label for="expiry-date">有效日期</label>
-          <input type="text" id="expiry-date" class="form-input" placeholder="MM/YY">
+          <input type="text" id="expiry-date" class="form-input" placeholder="MM/YY" v-model="expiryDate">
+          <p v-if="paymentFormErrors.expiryDate" class="error-message">請輸入有效日期。</p>
         </div>
 
         <!-- CVV -->
         <div class="form-group">
           <label for="cvv">CVV</label>
-          <input type="text" id="cvv" class="form-input" placeholder="XXX">
+          <input type="text" id="cvv" class="form-input" placeholder="XXX" v-model="cvv">
+          <p v-if="paymentFormErrors.cvv" class="error-message">請輸入 CVV。</p>
         </div>
 
         <!-- 聯絡電話 -->
         <div class="form-group">
           <label for="phone-number">聯絡電話</label>
-          <input type="text" id="phone-number" class="form-input" placeholder="請輸入聯絡電話">
+          <input type="text" id="phone-number" class="form-input" placeholder="請輸入聯絡電話" v-model="phoneNumber">
+          <p v-if="paymentFormErrors.phoneNumber" class="error-message">請輸入聯絡電話。</p>
         </div>
 
         <!-- 電子郵件 -->
         <div class="form-group">
           <label for="email">電子郵件</label>
-          <input type="email" id="email" class="form-input" placeholder="請輸入電子郵件">
+          <input type="email" id="email" class="form-input" placeholder="請輸入電子郵件" v-model="email">
+          <p v-if="paymentFormErrors.email" class="error-message">請輸入電子郵件。</p>
         </div>
       </div>
       <!-- 分隔線 -->
@@ -54,23 +60,81 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { useOrderStore } from '@/stores/order';
+import { reactive, ref } from 'vue';
 
 const router = useRouter();
 const orderStore = useOrderStore();
+
+// 表單數據
+const cardNumber = ref('');
+const cardHolderName = ref('');
+const expiryDate = ref('');
+const cvv = ref('');
+const phoneNumber = ref('');
+const email = ref('');
+
+// 表單驗證錯誤訊息
+const paymentFormErrors = reactive({
+  cardNumber: false,
+  cardHolderName: false,
+  expiryDate: false,
+  cvv: false,
+  phoneNumber: false,
+  email: false,
+});
 
 const goBack = () => {
   router.back();
 };
 
 const handleConfirmOrder = () => {
+  // 重置錯誤訊息
+  paymentFormErrors.cardNumber = false;
+  paymentFormErrors.cardHolderName = false;
+  paymentFormErrors.expiryDate = false;
+  paymentFormErrors.cvv = false;
+  paymentFormErrors.phoneNumber = false;
+  paymentFormErrors.email = false;
+
+  let hasError = false;
+
+  if (!cardNumber.value) {
+    paymentFormErrors.cardNumber = true;
+    hasError = true;
+  }
+  if (!cardHolderName.value) {
+    paymentFormErrors.cardHolderName = true;
+    hasError = true;
+  }
+  if (!expiryDate.value) {
+    paymentFormErrors.expiryDate = true;
+    hasError = true;
+  }
+  if (!cvv.value) {
+    paymentFormErrors.cvv = true;
+    hasError = true;
+  }
+  if (!phoneNumber.value) {
+    paymentFormErrors.phoneNumber = true;
+    hasError = true;
+  }
+  if (!email.value) {
+    paymentFormErrors.email = true;
+    hasError = true;
+  }
+
+  if (hasError) {
+    return; // 如果有錯誤，停止提交
+  }
+
   // 模擬獲取付款表單數據
   const paymentDetails = {
-    cardNumber: 'XXXX XXXX XXXX 1234',
-    cardHolderName: 'JOHN DOE',
-    expiryDate: '12/25',
-    cvv: '123',
-    phoneNumber: '0912345678',
-    email: 'john.doe@example.com',
+    cardNumber: cardNumber.value,
+    cardHolderName: cardHolderName.value,
+    expiryDate: expiryDate.value,
+    cvv: cvv.value,
+    phoneNumber: phoneNumber.value,
+    email: email.value,
   };
   orderStore.setPaymentDetails(paymentDetails);
   router.push('/order-confirmation'); // 導向新的訂單確認頁面
@@ -80,7 +144,7 @@ const handleConfirmOrder = () => {
 <style scoped>
 /* 表單外層容器 */
 .form-wrapper {
-  background-color: var(--color-background);
+  background-color: var(--color-neutral-form-bg-white);
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -165,5 +229,13 @@ const handleConfirmOrder = () => {
 
 .confirm-button:hover {
   opacity: 0.9;
+}
+
+/* 錯誤訊息樣式 */
+.error-message {
+  color: var(--color-semantic-alert);
+  font-size: 12px;
+  margin-top: 5px;
+  margin-left: 5px;
 }
 </style>
