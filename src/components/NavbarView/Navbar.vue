@@ -107,8 +107,9 @@
 export default {
     name: "Navbar",
     data() {
+        const baseUrl = import.meta.env.BASE_URL;
         return {
-            menuIconSrc: "/image/icon/nav-icon-menu.svg",
+            menuIconSrc: `${baseUrl}image/icon/nav-icon-menu.svg`,
             menuIconAlt: "漢堡條",
             desktopMenuItems: [
                 { text: "預訂行程", path: "/booking" },
