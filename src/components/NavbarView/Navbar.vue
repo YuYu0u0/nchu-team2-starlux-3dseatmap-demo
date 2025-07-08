@@ -135,14 +135,14 @@ export default {
     mounted() {
         const collapse = this.$refs.collapseRef;
         collapse.addEventListener("show.bs.collapse", () => {
-            this.menuIconSrc = `${baseUrl}image/icon/nav-icon-menu-close.svg`;
+            this.menuIconSrc = `${this.baseUrl}image/icon/nav-icon-menu-close.svg`;
             this.menuIconAlt = "關閉選單";
         });
         collapse.addEventListener("hide.bs.collapse", () => {
-            this.menuIconSrc = `${baseUrl}image/icon/nav-icon-menu.svg`;
+            this.menuIconSrc = `${this.baseUrl}image/icon/nav-icon-menu.svg`;
             this.menuIconAlt = "漢堡條";
         });
-    },
+    }
 };
 </script>
 
