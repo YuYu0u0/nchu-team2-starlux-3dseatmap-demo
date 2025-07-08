@@ -109,6 +109,7 @@ export default {
     data() {
         const baseUrl = import.meta.env.BASE_URL;
         return {
+            baseUrl,
             menuIconSrc: `${baseUrl}image/icon/nav-icon-menu.svg`,
             menuIconAlt: "漢堡條",
             desktopMenuItems: [
