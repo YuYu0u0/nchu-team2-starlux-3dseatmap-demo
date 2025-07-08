@@ -20,6 +20,8 @@
           v-model.number="windowBrightness" />
       </div>
     </div>
+    <video ref="videoElement" src="/video/VideoSTARLUX.mp4" muted loop playsinline crossOrigin="anonymous"
+      style="display:none;"></video>
   </div>
 </template>
 
@@ -32,296 +34,676 @@ import LoadingAnimation from '@/components/LoadingAnimation.vue';
 
 const emit = defineEmits(['model-loaded']);
 
+// --- 狀態管理 (State Management) ---
+
+const container = ref(null);
+const videoElement = ref(null);
+const leftCurtain = ref(null);
+
 // 布幕與動畫狀態
+
 const isCurtainOpen = ref(false);
 const isAnimating = ref(false);
-const leftCurtain = ref(null);
-const container = ref(null);
-const showLoadingScreen = ref(false); // 新增：控制 LoadingAnimation 顯示
+const showLoadingScreen = ref(false);
+const loadingProgress = ref(0);
+
+// 3D 場景狀態
+
+const isRotating = ref(true);
+const showRotationButton = ref(true);
+const showBrightnessSlider = ref(false);
+const windowBrightness = ref(1.0);
+const windowMaterial = ref(null);
+const originalWindowColor = ref(null);
 
 let scene, camera, renderer, controls, gltfScene, mixer;
-const isRotating = ref(true);
 let initialCameraPosition = new THREE.Vector3();
-const showRotationButton = ref(true);
 const clock = new THREE.Clock();
 
-const windowMaterial = ref(null);
-const windowBrightness = ref(1.0);
-const showBrightnessSlider = ref(false);
-const originalWindowColor = ref(null);
+// --- 組件屬性 (Props) ---
 
 const props = defineProps({
   selectedItem: String
 });
 
+
+
+// --- 攝影機預設位置 ---
+
 const featureCameraPresets = {
-  '電視': {
-    position: new THREE.Vector3(0.07, 0.55, 0.08),
-    target: new THREE.Vector3(0.21, 0.52, 0.47)
-  },
-  '小冰箱': {
-    position: new THREE.Vector3(-0.03, 0.47, 0),
-    target: new THREE.Vector3(0.13, 0.21, 0.27)
-  },
-  '廁所': {
-    position: new THREE.Vector3(-0.6, 0.65, 0.04),
-    target: new THREE.Vector3(0.04, 0.08, -0.06)
-  },
-  '調光窗戶': {
-    position: new THREE.Vector3(-0.27, 1.43, 0.04),
-    target: new THREE.Vector3(0.49, 1.38, 0.01)
-  },
+  '電視': { position: new THREE.Vector3(0.07, 0.55, 0.08), target: new THREE.Vector3(0.21, 0.52, 0.47) },
+  '小冰箱': { position: new THREE.Vector3(-0.03, 0.47, 0), target: new THREE.Vector3(0.13, 0.21, 0.27) },
+  '廁所': { position: new THREE.Vector3(-0.6, 0.65, 0.04), target: new THREE.Vector3(0.04, 0.08, -0.06) },
+  '調光窗戶': { position: new THREE.Vector3(-0.27, 1.43, 0.04), target: new THREE.Vector3(0.49, 1.38, 0.01) },
 };
 
+
+
+// --- Three.js 初始化 ---
+
 const initThreeD = () => {
+
   if (!container.value) return;
 
+
+
   const width = container.value.offsetWidth;
+
   const height = container.value.offsetHeight;
 
+
+
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x000000);
+
+  scene.background = new THREE.Color(0x101010);
+
+
 
   camera = new THREE.PerspectiveCamera(50, width / height, 0.01, 10000);
+
   camera.position.set(-0.96, 1.16, -0.61);
+
   initialCameraPosition.copy(camera.position);
 
+
+
   renderer = new THREE.WebGLRenderer({ antialias: true });
+
   renderer.setSize(width, height);
-  // 確保在布幕之後插入 canvas
+
+  renderer.setPixelRatio(window.devicePixelRatio);
+
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+
+  renderer.outputEncoding = THREE.sRGBEncoding;
+
   container.value.appendChild(renderer.domElement);
 
 
+
   controls = new OrbitControls(camera, renderer.domElement);
+
   controls.enableDamping = true;
-  controls.dampingFactor = 0.25;
+
+  controls.dampingFactor = 0.1;
+
   controls.screenSpacePanning = false;
-  controls.maxPolarAngle = Math.PI / 2;
+
+
+
+  // --- 修改：永久禁用滑鼠拖曳與縮放 ---
+
+  controls.enableRotate = false; // 禁用旋轉
+
+  controls.enableZoom = false; // 禁用縮放
+
+  controls.enablePan = false; // 禁用平移
+
+
+
+  controls.maxPolarAngle = Math.PI / 1.8;
+
+  controls.minDistance = 0.5;
+
+  controls.maxDistance = 3;
+
+  controls.target.set(0, 0.5, 0);
+
   controls.enabled = false;
-  controls.enablePan = false;
-  controls.enableZoom = false;
-  controls.enableRotate = false;
+
+
 
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+
   scene.add(ambientLight);
 
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+
+  directionalLight.position.set(5, 5, 5);
+
+  scene.add(directionalLight);
+
+
+
   const loader = new GLTFLoader();
+
   loader.load(
     `${import.meta.env.BASE_URL}models/equipment-introduction.glb`,
     (gltf) => {
-      scene.add(gltf.scene);
+
+      loadingProgress.value = 100;
+
       gltfScene = gltf.scene;
 
-      gltfScene.traverse((object) => {
-        if (object.isMesh && object.name === 'screan') {
-          const redMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-          object.material = redMaterial;
-        }
-        if (object.isMesh && object.name === 'window') {
-          windowMaterial.value = object.material;
-          originalWindowColor.value = windowMaterial.value.color.clone();
-          if (windowMaterial.value.isMeshStandardMaterial) {
-            windowMaterial.value.emissiveIntensity = windowBrightness.value;
-          } else if (windowMaterial.value.color) {
-            windowMaterial.value.color.setScalar(windowBrightness.value);
+      scene.add(gltfScene);
+
+
+
+      // --- 方案三 v3：動態生成新平面並正確 parenting ---
+
+      const originalScreen = gltfScene.getObjectByName('screan');
+
+      if (originalScreen && originalScreen.isMesh) {
+
+
+
+        originalScreen.visible = false;
+
+
+
+        const video = videoElement.value;
+
+        if (video) {
+
+          const videoTexture = new THREE.VideoTexture(video);
+
+          // --- 修正：將影片材質上下翻轉 ---
+
+          videoTexture.flipY = true;
+
+          videoTexture.encoding = THREE.sRGBEncoding;
+
+          videoTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+          videoTexture.minFilter = THREE.LinearFilter;
+
+          videoTexture.magFilter = THREE.LinearFilter;
+
+
+
+          const videoMaterial = new THREE.MeshBasicMaterial({
+
+            map: videoTexture,
+
+            toneMapped: false,
+
+            side: THREE.DoubleSide,
+
+          });
+
+
+
+          // 建立一個擁有完美 UV 的單位平面 (1x1)，大小由 scale 控制
+
+          const newScreenGeometry = new THREE.PlaneGeometry(1, 1);
+
+          const newScreen = new THREE.Mesh(newScreenGeometry, videoMaterial);
+
+          newScreen.name = "new_video_screen";
+
+
+
+          // --- 手動調整標示 ---
+
+          // 複製舊平面的局部 (local) 變換，這是最穩定的方法。
+
+          // 如果新平面的位置、旋轉或大小仍有偏差，請在此處手動微調。
+
+
+
+          // 複製位置
+
+          newScreen.position.copy(originalScreen.position);
+
+          // 範例：如果想讓新平面往上移動一點點
+
+          newScreen.position.x += 0.14;
+
+          newScreen.position.y += 0.25;
+
+
+
+          // 複製旋轉
+
+          newScreen.quaternion.copy(originalScreen.quaternion);
+
+          // 範例：如果想讓新平面再旋轉一點點 (較複雜，不建議)
+
+          const rotation = new THREE.Euler(0, Math.PI / 180 * -20, 0); // 沿 Y 軸轉 5 度
+
+          newScreen.quaternion.multiply(new THREE.Quaternion().setFromEuler(rotation));
+
+
+
+          // 複製縮放 (大小)
+
+          newScreen.scale.copy(originalScreen.scale);
+
+          // 範例：如果想讓新平面寬度變成 90%
+
+          newScreen.scale.x *= 0.2;
+
+          newScreen.scale.y *= 0.12;
+
+
+
+          // 將新平面加入到舊平面的父物件中，確保它在正確的層級結構裡
+
+          if (originalScreen.parent) {
+
+            originalScreen.parent.add(newScreen);
+
           }
+
+
+
+          video.play().catch(error => { console.error('播放影片時發生錯誤:', error); });
+
+
+
+        } else {
+
+          console.warn('找不到用於 screan 材質的 video 元素。');
+
         }
+
+      }
+
+
+
+      // 遍歷處理其他物件 (例如窗戶)
+
+      gltfScene.traverse((object) => {
+
+        if (object.isMesh && object.name === 'window') {
+
+          windowMaterial.value = object.material;
+
+          originalWindowColor.value = windowMaterial.value.color.clone();
+
+        }
+
       });
+
+
 
       mixer = new THREE.AnimationMixer(gltf.scene);
-      gltf.animations.forEach((clip) => {
-        const action = mixer.clipAction(clip);
-        action.loop = THREE.LoopRepeat;
-        action.play();
-      });
 
-      controls.target.set(0, 0, 0);
+      gltf.animations.forEach((clip) => { mixer.clipAction(clip).play(); });
+
+
+
       controls.update();
+
       onWindowResize();
-      // 初始載入時，確保所有模型都不可見
+
       updateModelVisibility(true);
-      // 發送模型載入完成事件
+
       emit('model-loaded');
+
     },
-    undefined,
+
+    (xhr) => {
+
+      if (xhr.total > 0) {
+
+        loadingProgress.value = (xhr.loaded / xhr.total) * 100;
+
+      }
+
+    },
+
     (error) => {
-      console.error('載入 GLB 模型時發生錯誤:', error);
+
+      console.error('載入 GLB 模型時發生嚴重錯誤:', error);
+
+      alert(`模型載入失敗！請檢查瀏覽器控制台(F12)的錯誤訊息.\n\n常見原因: \n1.模型路徑錯誤.\n2.檔案未放置在專案的 'public' 資料夾中.`);
+
+      showLoadingScreen.value = false;
+
     }
+
   );
 
+
+
   const animate = () => {
+
     requestAnimationFrame(animate);
+
     const delta = clock.getDelta();
+
     if (mixer) mixer.update(delta);
 
     if (isRotating.value) {
+
       const time = Date.now() * 0.0005;
+
       const radius = initialCameraPosition.distanceTo(new THREE.Vector3(0, initialCameraPosition.y, 0));
+
       camera.position.x = Math.sin(time) * radius;
+
       camera.position.z = Math.cos(time) * radius;
+
       camera.position.y = initialCameraPosition.y;
-      camera.lookAt(0, 0, 0);
+
+      camera.lookAt(0, 0.5, 0);
+
     } else {
+
       controls.update();
+
     }
+
     renderer.render(scene, camera);
+
   };
+
   animate();
 
+
+
   window.addEventListener('resize', onWindowResize);
+
 };
+
+
+
+// --- 事件處理與邏輯 ---
+
+
 
 const onWindowResize = () => {
-  if (!container.value) return;
+
+  if (!container.value || !camera || !renderer) return;
+
   const width = container.value.offsetWidth;
+
   const height = container.value.offsetHeight;
+
   camera.aspect = width / height;
+
   camera.updateProjectionMatrix();
+
   renderer.setSize(width, height);
+
 };
+
+
 
 const toggleRotation = () => {
+
   isRotating.value = !isRotating.value;
+
+  controls.enabled = !isRotating.value;
+
 };
 
+
+
 watch(windowBrightness, (newValue) => {
+
   if (windowMaterial.value && originalWindowColor.value) {
+
     const newColor = originalWindowColor.value.clone().multiplyScalar(newValue);
+
     windowMaterial.value.color.copy(newColor);
+
   }
+
 });
 
+
+
+// 更新模型可見性 (保留您原有的複雜邏輯)
+
 const updateModelVisibility = (forceHide = false) => {
+
   if (!gltfScene) return;
 
-  // 如果強制隱藏，則隱藏所有內容並返回
-  if (forceHide) {
-    gltfScene.traverse((object) => {
-      object.visible = false;
-    });
-    return;
-  }
+  if (forceHide || !props.selectedItem) {
 
-  // 如果沒有選擇項，也隱藏所有內容
-  if (!props.selectedItem) {
-    gltfScene.traverse((object) => {
-      object.visible = false;
-    });
+    gltfScene.traverse((object) => { object.visible = false; });
+
+    // 也要確保我們手動新增的螢幕被隱藏
+
+    const newScreen = scene.getObjectByName("new_video_screen");
+
+    if (newScreen) newScreen.visible = false;
+
     return;
+
   }
 
   const cabinGroups = { '頭等艙': 'Chair_FC', '豪華經濟艙': 'Chair_ED', '經濟艙': 'Chair_EC' };
+
   const featureGroups = { '電視': 'FC_refrigerator_TV', '小冰箱': 'FC_refrigerator_TV', '廁所': 'LAV', '調光窗戶': 'A350_Nose_wall' };
+
   const objectsToMakeVisible = new Set();
 
   const markAncestorsVisible = (object) => {
+
     let current = object;
-    while (current && current !== gltfScene.parent) {
+
+    while (current && current !== scene) {
+
       objectsToMakeVisible.add(current);
+
       current = current.parent;
+
     }
+
   };
 
   const markDescendantsVisible = (object) => {
-    object.traverse((child) => {
-      objectsToMakeVisible.add(child);
-    });
+
+    object.traverse((child) => { objectsToMakeVisible.add(child); });
+
   };
 
   gltfScene.traverse((object) => { object.visible = false; });
 
   gltfScene.traverse((object) => {
-    if (object.name === 'A350_Nose_plane') {
-      markAncestorsVisible(object);
-      markDescendantsVisible(object);
-    }
+
+    if (object.name === 'A350_Nose_plane') { markDescendantsVisible(object); }
+
   });
 
-  if (props.selectedItem) {
-    let targetObjectName = cabinGroups[props.selectedItem] || featureGroups[props.selectedItem];
+  let targetObjectName = cabinGroups[props.selectedItem] || featureGroups[props.selectedItem];
 
-    if (cabinGroups[props.selectedItem]) {
-      isRotating.value = true;
-      showRotationButton.value = true;
-      showBrightnessSlider.value = false;
-      camera.position.copy(initialCameraPosition);
-      controls.target.set(0, 0, 0);
-      controls.update();
-    } else if (featureGroups[props.selectedItem]) {
-      isRotating.value = false;
-      showRotationButton.value = false;
-      showBrightnessSlider.value = (props.selectedItem === '調光窗戶');
-      const preset = featureCameraPresets[props.selectedItem];
-      if (preset) {
-        camera.position.copy(preset.position);
-        controls.target.copy(preset.target);
-        controls.update();
-      }
+  if (cabinGroups[props.selectedItem]) {
+
+    isRotating.value = true;
+
+    controls.enabled = false;
+
+    showRotationButton.value = true;
+
+    showBrightnessSlider.value = false;
+
+    camera.position.copy(initialCameraPosition);
+
+    controls.target.set(0, 0.5, 0);
+
+  } else if (featureGroups[props.selectedItem]) {
+
+    isRotating.value = false;
+
+    controls.enabled = true; // 即使這裡是 true，由於上面的永久禁用設定，滑鼠也無法操作
+
+    showRotationButton.value = false;
+
+    showBrightnessSlider.value = (props.selectedItem === '調光窗戶');
+
+    const preset = featureCameraPresets[props.selectedItem];
+
+    if (preset) {
+
+      camera.position.copy(preset.position);
+
+      controls.target.copy(preset.target);
+
     }
 
-    if (targetObjectName) {
+  }
+
+  controls.update();
+
+  if (targetObjectName) {
+
+    gltfScene.traverse((object) => {
+
+      if (object.name === targetObjectName) {
+
+        markAncestorsVisible(object);
+
+        markDescendantsVisible(object);
+
+      }
+
+    });
+
+    if (props.selectedItem === '調光窗戶') {
+
       gltfScene.traverse((object) => {
-        if (object.name === targetObjectName) {
-          markAncestorsVisible(object);
-          markDescendantsVisible(object);
-        }
+
+        if (object.name === 'window') { markAncestorsVisible(object); }
+
       });
-      if (props.selectedItem === '調光窗戶') {
-        gltfScene.traverse((object) => {
-          if (object.name === 'window') {
-            markAncestorsVisible(object);
-            markDescendantsVisible(object);
-          }
-        });
-      }
+
     }
+
   }
 
   gltfScene.traverse((object) => {
-    object.visible = objectsToMakeVisible.has(object);
+
+    if (objectsToMakeVisible.has(object)) {
+
+      object.visible = true;
+
+    }
+
   });
+
+
+
+  // 確保舊螢幕永遠是隱藏的，新螢幕的可見性與其父物件一致
+
+  const oldScreen = gltfScene.getObjectByName('screan');
+
+  if (oldScreen) oldScreen.visible = false;
+
+  const newScreen = scene.getObjectByName("new_video_screen");
+
+  if (newScreen) {
+
+    newScreen.visible = newScreen.parent ? newScreen.parent.visible : false;
+
+  }
+
 };
 
+
+
 watch(() => props.selectedItem, (newItem) => {
+
   if (newItem && !isCurtainOpen.value) {
-    // 首次選擇，觸發布幕動畫
+
     isAnimating.value = true;
+
     if (container.value) {
-      // 添加 class 以觸發 CSS transition
+
       container.value.classList.add('curtain-open');
+
     }
-    showLoadingScreen.value = true; // 新增：在布幕動畫開始時顯示 LoadingAnimation
+
+    showLoadingScreen.value = true;
+
   } else {
-    // 布幕已開，直接更新模型
+
     updateModelVisibility();
+
   }
+
 });
+
+
+
+// --- 生命週期鉤子 (Lifecycle Hooks) ---
 
 onMounted(() => {
+
+  if (videoElement.value) {
+
+    videoElement.value.onerror = (e) => {
+
+      console.error('影片檔案載入錯誤:', e);
+
+      alert('影片檔案載入失敗，請檢查路徑 "/video/VideoSTARLUX.mp4" 是否正確。');
+
+    };
+
+  }
+
   initThreeD();
 
-  // 確保 DOM 元素已掛載
   nextTick(() => {
+
     if (leftCurtain.value) {
-      // 監聽 transition 動畫結束事件
+
       leftCurtain.value.addEventListener('transitionend', () => {
+
         isAnimating.value = false;
+
         isCurtainOpen.value = true;
-        showLoadingScreen.value = false; // 新增：隱藏 LoadingAnimation
-        // 動畫結束後，根據當前選擇的 item 更新模型可見性
+
+        if (loadingProgress.value >= 100) {
+
+          showLoadingScreen.value = false;
+
+        }
+
         updateModelVisibility();
-      }, { once: true }); // 確保事件只觸發一次
+
+      }, { once: true });
+
     }
+
   });
+
 });
 
+
 onUnmounted(() => {
+
   window.removeEventListener('resize', onWindowResize);
+
   if (renderer) {
+
     renderer.dispose();
+
+    scene.traverse(object => {
+
+      if (object.isMesh) {
+
+        if (object.geometry) object.geometry.dispose();
+
+        if (object.material) {
+
+          if (Array.isArray(object.material)) {
+
+            object.material.forEach(material => material.dispose());
+
+          } else {
+
+            object.material.dispose();
+
+          }
+
+        }
+
+      }
+
+    });
+
   }
+
 });
+
+
 </script>
+
+
 
 <style>
 .three-d-container {
@@ -517,7 +899,7 @@ onUnmounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--color-primary-gold);
+  background-color: var(--color-neutral-lower-form-brown);
   z-index: 15;
   /* 確保在布幕之下，Three.js 內容之上 */
 }

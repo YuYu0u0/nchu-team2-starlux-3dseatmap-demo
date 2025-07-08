@@ -19,7 +19,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 const props = defineProps({
     loadingText: {
         type: String,
-        default: '模型載入中'
+        default: '資料載入中'
     }
 });
 
@@ -45,7 +45,7 @@ onBeforeUnmount(() => {
     flex-direction: column;
     align-items: center;
     gap: 12px;
-    color: #333;
+    color: #fff;
     font-size: 20px;
     font-family: sans-serif;
     height: 100vh;
