@@ -72,7 +72,7 @@
 
       <!-- 下層區塊 -->
       <div class="form-lower">
-        <button class="search-button" @click="handleSearch">搜尋</button>
+        <button class="search-button" @click="handleSearch">搜尋航班</button>
       </div>
     </div>
 
