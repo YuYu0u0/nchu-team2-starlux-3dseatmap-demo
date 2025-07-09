@@ -33,16 +33,6 @@
     justify-content: center;
 }
 
-.slides-wrapper {
-    display: flex;
-    gap: 2rem;
-    overflow: hidden;
-    width: calc(160px * var(--slides-to-show) + 1rem * (var(--slides-to-show) - 1));
-    justify-content: center;
-}
-
-
-
 .arrow-icon {
     width: 24px;
     height: 24px;
@@ -78,11 +68,37 @@ button {
     height: 100%;
     object-fit: cover;
 }
+
+.slides-wrapper {
+    display: flex;
+    gap: 1rem;
+    overflow: hidden;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+/* RWD: 每個 slide 的寬度固定，wrapper 不限制死長度 */
+.slide {
+    flex: 0 0 auto;
+}
+
+/* 可根據裝置調整圖片大小 */
+.plane-window {
+    width: 180px;
+    height: 224px;
+}
+
+@media (max-width: 992px) {
+    .plane-window {
+        width: 150px;
+        height: 200px;
+    }
+}
 </style>
 
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 const baseUrl = import.meta.env.BASE_URL;
 const spots = [
     { name: '台北', image: `${baseUrl}image/city/Taipei.jpg` },
@@ -104,28 +120,51 @@ const spots = [
 ];
 
 
-const slidesToShow = 5 // 先示範 3 張可滑動
 const currentIndex = ref(0)
+const slidesToShow = ref(getSlidesToShow()) // 改成 ref
 
-const maxIndex = Math.max(spots.length - slidesToShow, 0)
+const maxIndex = computed(() =>
+    Math.max(spots.length - slidesToShow.value, 0)
+)
 
 const visibleSpots = computed(() => {
-    if (spots.length <= slidesToShow) {
+    if (spots.length <= slidesToShow.value) {
         return spots
     }
-    return spots.slice(currentIndex.value, currentIndex.value + slidesToShow)
+    return spots.slice(currentIndex.value, currentIndex.value + slidesToShow.value)
 })
 
 function prevSlide() {
-    if (currentIndex.value > 0) {
-        currentIndex.value--
-    }
+    if (currentIndex.value > 0) currentIndex.value--
 }
 
 function nextSlide() {
-    if (currentIndex.value < maxIndex) {
-        currentIndex.value++
+    if (currentIndex.value < maxIndex.value) currentIndex.value++
+}
+
+// 根據螢幕寬度調整 slidesToShow
+function getSlidesToShow() {
+    const width = window.innerWidth
+    if (width < 576) return 1
+    if (width < 768) return 2
+    if (width < 992) return 3
+    if (width < 1200) return 4
+    return 5
+}
+
+function handleResize() {
+    slidesToShow.value = getSlidesToShow()
+    // 當 slidesToShow 改變時，防止 currentIndex 超出 maxIndex
+    if (currentIndex.value > maxIndex.value) {
+        currentIndex.value = maxIndex.value
     }
 }
 
+onMounted(() => {
+    window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize)
+})
 </script>
