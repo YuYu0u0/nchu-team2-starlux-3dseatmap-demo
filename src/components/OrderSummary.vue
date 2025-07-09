@@ -24,13 +24,22 @@
     </div>
 
     <div class="summary-section">
+      <h3>旅客資訊</h3>
+      <p v-if="orderStore.passengerInfo">
+        稱謂: {{ orderStore.passengerInfo.salutation === 'mr' ? '先生' : orderStore.passengerInfo.salutation === 'ms' ? '小姐' : orderStore.passengerInfo.salutation === 'mrs' ? '女士' : '' }}<br>
+        姓名: {{ orderStore.passengerInfo.fullName }}<br>
+        電子郵件: {{ orderStore.passengerInfo.email }}<br>
+        手機號碼: {{ orderStore.passengerInfo.phoneNumber }}<br>
+      </p>
+      <p v-else>無旅客資訊</p>
+    </div>
+
+    <div class="summary-section">
       <h3>付款資訊</h3>
       <p v-if="orderStore.paymentDetails">
         信用卡號: {{ orderStore.paymentDetails.cardNumber }}<br>
         持卡人姓名: {{ orderStore.paymentDetails.cardHolderName }}<br>
         有效日期: {{ orderStore.paymentDetails.expiryDate }}<br>
-        聯絡電話: {{ orderStore.paymentDetails.phoneNumber }}<br>
-        電子郵件: {{ orderStore.paymentDetails.email }}
       </p>
       <p v-else>無付款資訊</p>
     </div>

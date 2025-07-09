@@ -31,20 +31,7 @@
           <p v-if="paymentFormErrors.cvv" class="error-message">請輸入 CVV。</p>
         </div>
 
-        <!-- 聯絡電話 -->
-        <div class="form-group">
-          <label for="phone-number">聯絡電話</label>
-          <input type="text" id="phone-number" class="form-input" placeholder="請輸入聯絡電話" v-model="phoneNumber">
-          <p v-if="paymentFormErrors.phoneNumber" class="error-message">請輸入聯絡電話。</p>
         </div>
-
-        <!-- 電子郵件 -->
-        <div class="form-group">
-          <label for="email">電子郵件</label>
-          <input type="email" id="email" class="form-input" placeholder="請輸入電子郵件" v-model="email">
-          <p v-if="paymentFormErrors.email" class="error-message">請輸入電子郵件。</p>
-        </div>
-      </div>
       <!-- 分隔線 -->
       <hr class="separator">
 
@@ -70,8 +57,6 @@ const cardNumber = ref('');
 const cardHolderName = ref('');
 const expiryDate = ref('');
 const cvv = ref('');
-const phoneNumber = ref('');
-const email = ref('');
 
 // 表單驗證錯誤訊息
 const paymentFormErrors = reactive({
@@ -79,8 +64,6 @@ const paymentFormErrors = reactive({
   cardHolderName: false,
   expiryDate: false,
   cvv: false,
-  phoneNumber: false,
-  email: false,
 });
 
 const goBack = () => {
@@ -93,8 +76,6 @@ const handleConfirmOrder = () => {
   paymentFormErrors.cardHolderName = false;
   paymentFormErrors.expiryDate = false;
   paymentFormErrors.cvv = false;
-  paymentFormErrors.phoneNumber = false;
-  paymentFormErrors.email = false;
 
   let hasError = false;
 
@@ -114,14 +95,6 @@ const handleConfirmOrder = () => {
     paymentFormErrors.cvv = true;
     hasError = true;
   }
-  if (!phoneNumber.value) {
-    paymentFormErrors.phoneNumber = true;
-    hasError = true;
-  }
-  if (!email.value) {
-    paymentFormErrors.email = true;
-    hasError = true;
-  }
 
   if (hasError) {
     return; // 如果有錯誤，停止提交
@@ -133,8 +106,6 @@ const handleConfirmOrder = () => {
     cardHolderName: cardHolderName.value,
     expiryDate: expiryDate.value,
     cvv: cvv.value,
-    phoneNumber: phoneNumber.value,
-    email: email.value,
   };
   orderStore.setPaymentDetails(paymentDetails);
   router.push('/order-confirmation'); // 導向新的訂單確認頁面

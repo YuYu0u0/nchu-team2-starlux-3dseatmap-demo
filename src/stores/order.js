@@ -7,6 +7,7 @@ export const useOrderStore = defineStore('order', () => {
   const paymentDetails = ref(null);
   const fromHomepageSearch = ref(false); // 新增旗標
   const selectedFlight = ref(null); // 新增選定航班資訊
+  const passengerInfo = ref(null); // 新增旅客資訊
 
   function setBookingDetails(details) {
     bookingDetails.value = details;
@@ -18,6 +19,10 @@ export const useOrderStore = defineStore('order', () => {
 
   function setPaymentDetails(details) {
     paymentDetails.value = details;
+  }
+
+  function setPassengerInfo(details) { // 新增旅客資訊 action
+    passengerInfo.value = details;
   }
 
   // 新增一個 action 來設置旗標
@@ -36,9 +41,11 @@ export const useOrderStore = defineStore('order', () => {
     paymentDetails,
     fromHomepageSearch,
     selectedFlight, // 導出選定航班資訊
+    passengerInfo, // 導出旅客資訊
     setBookingDetails,
     setSeatDetails,
     setPaymentDetails,
+    setPassengerInfo, // 導出旅客資訊 action
     setFromHomepageSearch,
     setSelectedFlight, // 導出 action
   };

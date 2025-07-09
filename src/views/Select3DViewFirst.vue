@@ -517,7 +517,7 @@ function handleConfirm() {
   if (selectedTargetData.value) {
     orderStore.setSeatDetails(selectedTargetData.value);
   }
-  router.push('/payment-method');
+  router.push('/passenger-info');
 }
 
 function handleBack() {

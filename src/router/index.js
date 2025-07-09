@@ -16,6 +16,7 @@ import AnnouncementView from "@/views/AnnouncementView.vue"
 import MembershipView from "@/views/MembershipView.vue"
 import PassengerFaqView from "@/views/PassengerFaqView.vue"
 import FlightStatusView from "@/views/FlightStatusView.vue";
+import PassengerInfoView from "@/views/PassengerInfoView.vue"; // New import
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,6 +25,11 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+    },
+    { // New route
+      path: "/passenger-info",
+      name: "passenger-info",
+      component: PassengerInfoView,
     },
     {
       path: "/booking",
