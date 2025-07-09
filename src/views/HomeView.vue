@@ -43,26 +43,6 @@ import Subscription from '@/components/Homeview/Subscription.vue';
 </script>
 
 <style scoped>
-.page-container {
-  width: 100%;
-}
-
-.full-width-hr {
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  width: 100vw;
-  /* 滿版寬度 */
-}
-
-.full-width-hr hr {
-  border: none;
-  border-top: 1px solid gray;
-  margin: 0;
-}
-
 /* Main 區塊 */
 main {
   padding: 0;

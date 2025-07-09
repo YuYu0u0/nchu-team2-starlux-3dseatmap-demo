@@ -40,28 +40,13 @@ import FooterBottom from '@/components/FooterView/FooterBottom.vue';
 </script>
 
 <style scoped>
-.full-width-hr {
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  width: 100vw;
-  /* 滿版寬度 */
-}
-
-.full-width-hr hr {
-  border: none;
-  border-top: 1px solid gray;
-  margin: 0;
-}
-
 /* Main 區塊 */
 .main-top-bg {
   display: flex;
   align-items: center;
   color: #ffffff;
-  padding: 20px 0; /* 增加上下內邊距 */
+  padding: 20px 0;
+  /* 增加上下內邊距 */
 }
 
 .main-bottom-bg {

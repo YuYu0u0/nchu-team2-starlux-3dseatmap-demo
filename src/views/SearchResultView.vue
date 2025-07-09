@@ -206,22 +206,6 @@ header {
   height: 54px;
 }
 
-.full-width-hr {
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  width: 100vw;
-  /* 滿版寬度 */
-}
-
-.full-width-hr hr {
-  border: none;
-  border-top: 1px solid gray;
-  margin: 0;
-}
-
 /* 3. 訂票區區塊 */
 .booking-section {
   /* height: 600px; */
