@@ -29,7 +29,8 @@
         <div class="form-group">
           <label for="departure-date">搭乘日期</label>
           <div class="input-with-icon">
-            <input type="date" id="departure-date" class="form-input" placeholder="請選擇日期" ref="dateInputRef" v-model="departureDate">
+            <input type="date" id="departure-date" class="form-input" placeholder="請選擇日期" ref="dateInputRef"
+              v-model="departureDate">
             <span class="icon calendar-icon" @click="triggerDatePicker">📅</span>
           </div>
         </div>
@@ -45,13 +46,17 @@
     </div>
 
     <!-- 地點選擇彈跳視窗 -->
-    <LocationModal v-if="isLocationModalVisible" :title="locationModalTitle" @close="isLocationModalVisible = false" @select="handleLocationSelect" />
+    <LocationModal v-if="isLocationModalVisible" :title="locationModalTitle" @close="isLocationModalVisible = false"
+      @select="handleLocationSelect" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import LocationModal from '@/components/PopUpWindow/LocationModal.vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
 
 // 控制地點選擇彈跳視窗
 const isLocationModalVisible = ref(false);
@@ -98,7 +103,7 @@ const triggerDatePicker = () => {
 // 處理查詢按鈕點擊事件 (無功能)
 const handleSearch = () => {
   console.log('查詢按鈕被點擊');
-  // 此處不執行任何操作
+  router.push({ name: 'comming-soon' });
 };
 </script>
 
@@ -114,7 +119,8 @@ const handleSearch = () => {
 
 .form-upper {
   display: grid;
-  grid-template-columns: 2fr 1fr; /* 調整左右比例 */
+  grid-template-columns: 2fr 1fr;
+  /* 調整左右比例 */
   gap: 20px 30px;
 }
 
