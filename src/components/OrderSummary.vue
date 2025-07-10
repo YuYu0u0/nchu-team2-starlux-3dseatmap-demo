@@ -30,6 +30,7 @@
         姓名: {{ orderStore.passengerInfo.fullName }}<br>
         電子郵件: {{ orderStore.passengerInfo.email }}<br>
         手機號碼: {{ orderStore.passengerInfo.phoneNumber }}<br>
+        <span v-if="orderStore.passengerInfo.membershipId">會員帳號: {{ orderStore.passengerInfo.membershipId }}</span>
       </p>
       <p v-else>無旅客資訊</p>
     </div>

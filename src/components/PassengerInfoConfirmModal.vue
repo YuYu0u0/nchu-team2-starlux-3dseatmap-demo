@@ -57,7 +57,8 @@
               稱謂: {{ passengerInfo.salutation === 'mr' ? '先生' : passengerInfo.salutation === 'ms' ? '小姐' : passengerInfo.salutation === 'mrs' ? '女士' : '' }}<br>
               姓名: {{ passengerInfo.fullName }}<br>
               電子郵件: {{ passengerInfo.email }}<br>
-              手機號碼: {{ passengerInfo.phoneNumber }}
+              手機號碼: {{ passengerInfo.phoneNumber }}<br>
+              <span v-if="passengerInfo.membershipId">會員帳號: {{ passengerInfo.membershipId }}</span>
             </p>
           </div>
         </div>

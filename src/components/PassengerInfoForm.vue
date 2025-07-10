@@ -6,42 +6,47 @@
         <!-- 稱謂 -->
         <div class="form-group">
           <label for="salutation">稱謂</label>
-          <select id="salutation" class="form-input" v-model="salutation">
+          <select id="salutation" class="form-input" v-model="salutation" :class="{ 'input-error': formErrors.salutation }">
             <option value="">請選擇</option>
             <option value="mr">先生</option>
             <option value="ms">小姐</option>
             <option value="mrs">女士</option>
           </select>
+          <p v-if="formErrors.salutation" class="error-message">請選擇稱謂。</p>
         </div>
 
         <!-- 姓名 -->
         <div class="form-group">
           <label for="fullName">姓名</label>
-          <input type="text" id="fullName" class="form-input" placeholder="請輸入姓名" v-model="fullName">
+          <input type="text" id="fullName" class="form-input" placeholder="請輸入姓名" v-model="fullName" :class="{ 'input-error': formErrors.fullName }">
+          <p v-if="formErrors.fullName" class="error-message">請輸入姓名。</p>
         </div>
 
         <!-- 電子郵件 -->
         <div class="form-group">
           <label for="email">電子郵件</label>
-          <input type="email" id="email" class="form-input" placeholder="請輸入電子郵件" v-model="email">
-        </div>
-
-        <!-- 再次輸入電子郵件 -->
-        <div class="form-group">
-          <label for="confirmEmail">再次輸入電子郵件</label>
-          <input type="email" id="confirmEmail" class="form-input" placeholder="請再次輸入電子郵件" v-model="confirmEmail">
+          <input type="email" id="email" class="form-input" placeholder="請輸入電子郵件" v-model="email" :class="{ 'input-error': formErrors.email }">
+          <p v-if="formErrors.email" class="error-message">請輸入有效的電子郵件格式。</p>
         </div>
 
         <!-- 手機號碼 -->
         <div class="form-group">
           <label for="phoneNumber">手機號碼</label>
-          <input type="tel" id="phoneNumber" class="form-input" placeholder="請輸入手機號碼" v-model="phoneNumber">
+          <input type="tel" id="phoneNumber" class="form-input" placeholder="請輸入手機號碼" v-model="phoneNumber" :class="{ 'input-error': formErrors.phoneNumber }">
+          <p v-if="formErrors.phoneNumber" class="error-message">請輸入手機號碼。</p>
+        </div>
+
+        <!-- 會員帳號 -->
+        <div class="form-group">
+          <label for="membershipId">會員帳號</label>
+          <input type="text" id="membershipId" class="form-input" placeholder="選填" v-model="membershipId">
         </div>
 
         <!-- 隱私政策同意 -->
         <div class="form-group checkbox-group">
           <input type="checkbox" id="privacyPolicy" v-model="privacyPolicyAgreed">
           <label for="privacyPolicy">同意星宇航空的隱私政策</label>
+          <p v-if="formErrors.privacyPolicyAgreed" class="error-message">您必須同意隱私政策。</p>
         </div>
       </div>
       <!-- 分隔線 -->
@@ -66,8 +71,8 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { useOrderStore } from '@/stores/order';
-import { ref } from 'vue';
-import PassengerInfoConfirmModal from '@/components/PassengerInfoConfirmModal.vue'; // New import
+import { ref, reactive } from 'vue';
+import PassengerInfoConfirmModal from '@/components/PassengerInfoConfirmModal.vue';
 
 const router = useRouter();
 const orderStore = useOrderStore();
@@ -76,30 +81,72 @@ const orderStore = useOrderStore();
 const salutation = ref('');
 const fullName = ref('');
 const email = ref('');
-const confirmEmail = ref('');
+const membershipId = ref(''); // Changed from confirmEmail
 const phoneNumber = ref('');
 const privacyPolicyAgreed = ref(false);
 
+// 表單驗證錯誤訊息
+const formErrors = reactive({
+  salutation: false,
+  fullName: false,
+  email: false,
+  phoneNumber: false,
+  privacyPolicyAgreed: false,
+});
+
 // 控制彈跳視窗顯示
-const showConfirmModal = ref(false); // New ref
+const showConfirmModal = ref(false);
 
 const goBack = () => {
   router.back();
 };
 
 const handleNextStep = () => {
-  // 模擬儲存旅客資訊到 Pinia store
-  // 注意：這裡的 passengerInfo 是一個響應式物件，但其屬性不是響應式的
-  // 如果需要響應式更新，應該使用 reactive 或 computed
+  // 1. 重置錯誤狀態
+  Object.keys(formErrors).forEach(key => {
+    formErrors[key] = false;
+  });
+
+  let hasError = false;
+
+  // 2. 執行驗證
+  if (!salutation.value) {
+    formErrors.salutation = true;
+    hasError = true;
+  }
+  if (!fullName.value.trim()) {
+    formErrors.fullName = true;
+    hasError = true;
+  }
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email.value || !emailPattern.test(email.value)) {
+    formErrors.email = true;
+    hasError = true;
+  }
+  if (!phoneNumber.value.trim()) {
+    formErrors.phoneNumber = true;
+    hasError = true;
+  }
+  if (!privacyPolicyAgreed.value) {
+    formErrors.privacyPolicyAgreed = true;
+    hasError = true;
+  }
+
+  // 3. 如果有錯誤，則停止執行
+  if (hasError) {
+    return;
+  }
+
+  // 4. 如果驗證通過，儲存資訊並顯示 Modal
   orderStore.setPassengerInfo({
     salutation: salutation.value,
     fullName: fullName.value,
     email: email.value,
+    membershipId: membershipId.value,
     phoneNumber: phoneNumber.value,
     privacyPolicyAgreed: privacyPolicyAgreed.value,
   });
 
-  // 顯示確認彈跳視窗
   showConfirmModal.value = true;
 };
 </script>
@@ -204,5 +251,29 @@ const handleNextStep = () => {
   width: auto;
   height: auto;
   margin: 0;
+}
+
+/* 錯誤訊息樣式 (從 BookingForm.vue 複製) */
+.error-message {
+  color: var(--color-semantic-alert);
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* 驗證失敗的輸入框樣式 */
+.input-error {
+  border-color: var(--color-semantic-alert) !important;
+}
+</style>
+
+<style>
+/* 頁面容器 */
+.form-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px;
+  background-color: #f4f4f4;
+  min-height: 100vh;
 }
 </style>
