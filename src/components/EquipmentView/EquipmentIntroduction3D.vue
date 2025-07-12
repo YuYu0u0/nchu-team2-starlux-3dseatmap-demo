@@ -586,7 +586,7 @@ onUnmounted(() => {
 .rotation-button {
   position: absolute;
   top: 10px;
-  right: 10px;
+  left: 10px;
   padding: 8px 12px;
   border: 2px solid var(--color-primary-gold);
   color: var(--color-primary-gold);
