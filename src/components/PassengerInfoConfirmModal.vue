@@ -54,7 +54,7 @@
           <div class="summary-section">
             <h3>旅客資訊</h3>
             <p>
-              稱謂: {{ passengerInfo.salutation === 'mr' ? '先生' : passengerInfo.salutation === 'ms' ? '小姐' : passengerInfo.salutation === 'mrs' ? '女士' : '' }}<br>
+              稱謂: {{ passengerInfo.salutation === 'mr' ? '先生' : passengerInfo.salutation === 'ms' ? '小姐' : passengerInfo.salutation === 'other' ? '性別' : '' }}<br>
               姓名: {{ passengerInfo.fullName }}<br>
               電子郵件: {{ passengerInfo.email }}<br>
               手機號碼: {{ passengerInfo.phoneNumber }}<br>

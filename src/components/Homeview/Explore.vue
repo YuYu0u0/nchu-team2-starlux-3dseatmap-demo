@@ -119,7 +119,6 @@ const spots = [
     { name: '大阪', image: `${baseUrl}image/city/Osaka.jpg` },
 ];
 
-
 const currentIndex = ref(0)
 const slidesToShow = ref(getSlidesToShow()) // 改成 ref
 

@@ -10,7 +10,7 @@
             <option value="">請選擇</option>
             <option value="mr">先生</option>
             <option value="ms">小姐</option>
-            <option value="mrs">女士</option>
+            <option value="other">其他</option>
           </select>
           <p v-if="formErrors.salutation" class="error-message">請選擇稱謂。</p>
         </div>
@@ -263,17 +263,5 @@ const handleNextStep = () => {
 /* 驗證失敗的輸入框樣式 */
 .input-error {
   border-color: var(--color-semantic-alert) !important;
-}
-</style>
-
-<style>
-/* 頁面容器 */
-.form-page-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 40px;
-  background-color: #f4f4f4;
-  min-height: 100vh;
 }
 </style>

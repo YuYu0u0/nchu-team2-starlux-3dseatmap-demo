@@ -40,13 +40,14 @@ import FooterBottom from '@/components/FooterView/FooterBottom.vue';
 </script>
 
 <style scoped>
+
+
 /* Main 區塊 */
 .main-top-bg {
   display: flex;
   align-items: center;
   color: #ffffff;
-  padding: 20px 0;
-  /* 增加上下內邊距 */
+  padding: 20px 0; /* 增加上下內邊距 */
 }
 
 .main-bottom-bg {

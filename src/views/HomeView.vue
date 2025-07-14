@@ -43,6 +43,10 @@ import Subscription from '@/components/Homeview/Subscription.vue';
 </script>
 
 <style scoped>
+
+
+
+
 /* Main 區塊 */
 main {
   padding: 0;

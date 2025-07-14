@@ -143,7 +143,7 @@ export default {
             this.menuIconSrc = `${this.baseUrl}image/icon/nav-icon-menu.svg`;
             this.menuIconAlt = "漢堡條";
         });
-    }
+    },
 };
 </script>
 

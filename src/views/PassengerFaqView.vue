@@ -82,6 +82,8 @@ function toggle(index) {
 </script>
 
 <style scoped>
+
+
 .faq-container {
     max-width: 80%;
     margin: 0 auto;

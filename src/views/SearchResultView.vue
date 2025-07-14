@@ -1,29 +1,33 @@
 <template>
-  <div class="container">
+  <div class="page-container">
 
-    <!-- 上方區塊: Logo -->
-    <header class="header-section">
-      <NavbarSimple />
-    </header>
+    <div class="container">
+      <!-- 上方區塊: Logo -->
+      <header class="header-section">
+        <NavbarSimple />
+      </header>
+    </div>
 
     <!-- 滿版分隔線 -->
     <div class="full-width-hr">
       <hr />
     </div>
 
-    <!-- 機票規則內容區塊 -->
-    <TicketInfo />
+    <div class="container">
+      <!-- 機票規則內容區塊 -->
+      <TicketInfo />
 
-    <!-- 訂票區 -->
-    <section class="booking-section">
-      <BookingTicket v-for="flight in flights" :key="flight.id" :flight="flight"
-        :cabinClass="orderStore.bookingDetails?.cabinClass || 'economy'" />
-    </section>
-    <!-- 返回列 -->
-    <SearchAgain />
+      <!-- 訂票區 -->
+      <section class="booking-section">
+        <BookingTicket v-for="flight in flights" :key="flight.id" :flight="flight"
+          :cabinClass="orderStore.bookingDetails?.cabinClass || 'economy'" />
+      </section>
+      <!-- 返回列 -->
+      <SearchAgain />
 
-    <!-- 注意事項 -->
-    <Notice />
+      <!-- 注意事項 -->
+      <Notice />
+    </div>
 
   </div>
 </template>
@@ -205,6 +209,8 @@ header {
 .header-section {
   height: 54px;
 }
+
+
 
 /* 3. 訂票區區塊 */
 .booking-section {

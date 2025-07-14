@@ -110,7 +110,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .gold-text {
-    color: var(--color-neutral-navbar-text);
+    color: var(--color-primary-gold);
 }
 
 .hero-slider {

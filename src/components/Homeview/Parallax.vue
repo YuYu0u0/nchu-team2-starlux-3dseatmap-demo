@@ -33,6 +33,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+
 const props = defineProps({
     title: { type: String, default: '立即探索精彩目的地' },
     buttonText: { type: String, default: '立即預訂' },

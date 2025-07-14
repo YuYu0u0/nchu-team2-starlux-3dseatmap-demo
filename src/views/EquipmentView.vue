@@ -11,8 +11,7 @@
     </div>
 
     <!-- Main 內容區塊 -->
-    <main id="threed-area"
-      class="container-fluid d-flex flex-lg-row flex-column align-items-start justify-content-center">
+    <main id="threed-area" class="container-fluid d-flex flex-lg-row flex-column align-items-start justify-content-center">
       <CabinButtons :selected="selectedCabin" @select="handleCabinSelection" :disabled="!isModelReady" />
       <div class="threed-area my-4 my-lg-5 d-flex justify-content-center align-items-center">
         <EquipmentIntroduction3D :selectedItem="currentSelectedItem" @model-loaded="onModelLoaded" />
@@ -34,16 +33,16 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed } from 'vue';
 
-import Navbar from "@/components/NavbarView/Navbar.vue";
-import FooterTop from "@/components/FooterView/FooterTop.vue";
-import FooterBottom from "@/components/FooterView/FooterBottom.vue";
+import Navbar from '@/components/NavbarView/Navbar.vue';
+import FooterTop from '@/components/FooterView/FooterTop.vue';
+import FooterBottom from '@/components/FooterView/FooterBottom.vue';
 
-import CabinButtons from "@/components/EquipmentView/CabinButtons.vue";
-import FeatureButtons from "@/components/EquipmentView/FeatureButtons.vue";
-import EquipmentIntroduction3D from "@/components/EquipmentView/EquipmentIntroduction3D.vue";
-import EquipmentIntroduction from "@/components/EquipmentView/EquipmentIntroduction.vue";
+import CabinButtons from '@/components/EquipmentView/CabinButtons.vue';
+import FeatureButtons from '@/components/EquipmentView/FeatureButtons.vue';
+import EquipmentIntroduction3D from '@/components/EquipmentView/EquipmentIntroduction3D.vue';
+import EquipmentIntroduction from '@/components/EquipmentView/EquipmentIntroduction.vue';
 
 const selectedCabin = ref(null);
 const selectedFeature = ref(null);

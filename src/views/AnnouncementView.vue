@@ -124,6 +124,8 @@ import FooterBottom from '@/components/FooterView/FooterBottom.vue';
 </script>
 
 <style scoped>
+
+
 .container {
     margin: 0 auto;
     padding: 20px;
